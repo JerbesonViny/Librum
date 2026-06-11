@@ -1,0 +1,17 @@
+# compiled output
+/dist
+/node_modules
+/build
+
+# Logs
+yarn-debug.log*
+yarn-error.log*
+
+# Tests
+/coverage
+
+# IDE - VSCode
+.vscode/*
+
+# dotenv environment variable files
+.env

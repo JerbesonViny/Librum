@@ -1,0 +1,36 @@
+version: "3"
+
+tasks:
+  default: 
+    cmd: 
+      task: "start"
+
+  start:
+    desc: Sobe os containers
+    cmds:
+      - docker compose build --no-cache
+      - docker compose up -d --force-recreate
+
+  dev:
+    desc: Sobe os containers 
+    cmds:
+      - task: stop
+      - docker compose build
+      - docker compose up -d
+
+  stop:
+    desc: Derruba todos os containers
+    cmds:
+      - docker compose down -v
+
+  app:
+    desc: Abre um shell no container da aplicação
+    cmd: docker compose exec app sh
+
+  logs:
+    desc: Exibe os logs sem travar o terminal
+    cmd: docker compose logs app 
+
+  logs-follow:
+    desc: Acompanha os logs
+    cmd: docker compose logs -f app 

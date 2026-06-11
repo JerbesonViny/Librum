@@ -10,3 +10,21 @@ services:
     volumes:
       - ./src:/app/src
       - ./test:/app/test
+    networks:
+      - library
+
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - library
+
+volumes:
+  mongo_data:
+
+networks:
+  library:
+    driver: bridge

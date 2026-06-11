@@ -23,7 +23,7 @@ export class UserRepository implements GetUserByEmail<UserEntity> {
     }
 
     return new UserEntity({
-      id: user.id.toString(),
+      id: user._id.toString(),
       name: user.name,
       lastName: user.lastName,
       email: user.email,

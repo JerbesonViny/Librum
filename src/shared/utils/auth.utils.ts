@@ -34,9 +34,11 @@ export function isValidToken({ token, privateKey }: IsValidToken): boolean {
   }
 }
 
-export function decodeToken({ token }: DecodeToken): string | object | null {
+export function decodeToken({
+  token,
+}: DecodeToken): Record<string, any> | null {
   try {
-    return decode(token);
+    return decode(token) as Record<string, any>;
   } catch {
     return null;
   }

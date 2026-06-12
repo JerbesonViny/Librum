@@ -8,7 +8,10 @@ import { AppModule } from '@/app.module';
 import { HttpExceptionFilter } from '@/infra/filters/http.filter';
 import { EntityId } from '@/domain/entities';
 import { DatabaseConnector, DatabaseSeeder } from '../../utils/seeder';
-import { infiniteLibrarianJwtTokenMock } from '../../mocks/auth.mocks';
+import {
+  infiniteLibrarianJwtTokenMock,
+  infiniteTenantJwtTokenMock,
+} from '../../mocks/auth.mocks';
 
 describe('Books Controller', () => {
   let app: INestApplication<App>;
@@ -56,6 +59,23 @@ describe('Books Controller', () => {
     });
 
     describe('Errors', () => {
+      it('Should throw error if tenant user was trying to create a new book', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/books')
+          .set({ authorization: infiniteTenantJwtTokenMock })
+          .send({
+            title: 'example title',
+            description: 'example description',
+            releaseDate: '20250802',
+            authors: ['Heisenberg'],
+          });
+
+        const body = response.body;
+        expect(body.bookId).toBeUndefined();
+        expect(body.message).toBe('Librarian access is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
       it('Should throw error if token is undefined', async () => {
         const response = await request(app.getHttpServer())
           .post('/books')

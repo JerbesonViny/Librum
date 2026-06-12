@@ -1,0 +1,3 @@
+export const infiniteLibrarianJwtTokenMock =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMmIzZmExZWQzNThlYWFmYTI5MDU1ZSIsInJ1bGUiOiJMSUJSQVJJQU4iLCJpYXQiOjE3ODEyNzcyNTR9.DTu21WBQ18_6NcuzzAJd2C1-r8sorefXhUr2BfvV124';
+export const secretKeyMock = 'notSoSecretAfterAll';

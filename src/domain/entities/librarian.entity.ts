@@ -1,7 +1,9 @@
-import { UserConstructor, UserEntity } from './user.entity';
+import { UserConstructor, UserEntity, UserRoles } from './user.entity';
 
 export class LibrarianEntity extends UserEntity {
-  constructor(input: UserConstructor) {
-    super(input);
+  protected readonly role: UserRoles = 'LIBRARIAN';
+
+  constructor({ ...user }: UserConstructor) {
+    super(user);
   }
 }

@@ -10,7 +10,7 @@ import {
   GetUserByEmail,
   USER_REPOSITORY,
 } from '@/domain/contracts/repositories/user.repository';
-import { LibrarianEntity } from '@/domain/entities';
+import { LibrarianEntity, UserRoles } from '@/domain/entities';
 
 export type Input = {
   email: string;
@@ -23,6 +23,8 @@ export type Output = {
 
 @Injectable()
 export class AuthLibrarianUseCase {
+  private readonly role: UserRoles = 'LIBRARIAN';
+
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: GetUserByEmail<LibrarianEntity>,
@@ -30,7 +32,10 @@ export class AuthLibrarianUseCase {
   ) {}
   async perform({ email, password }: Input): Promise<Output> {
     const formattedEmail = email.trim();
-    const user = await this.userRepository.getUserByEmail(formattedEmail);
+    const user = await this.userRepository.getUserByEmail({
+      email: formattedEmail,
+      role: this.role,
+    });
 
     if (!user) {
       throw new UserNotFoundError();
@@ -55,7 +60,7 @@ export class AuthLibrarianUseCase {
     return createToken({
       payload: {
         userId: user.getId(),
-        rule: 'LIBRARIAN',
+        role: this.role,
       },
       privateKey: this.configService.get<string>('jwt.secretKey') as string,
     });

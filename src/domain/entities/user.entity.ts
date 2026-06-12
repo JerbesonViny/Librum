@@ -1,13 +1,13 @@
-import { randomUUID } from 'crypto';
 import {
   EmptyFieldError,
   MinimumCharactersPasswordError,
 } from '@/shared/errors';
+import { EntityId } from './id.entity';
 
-export type UserId = string;
+export type UserRoles = 'LIBRARIAN' | 'TENANT';
 
 export type UserConstructor = {
-  id?: string;
+  id?: EntityId;
   name: string;
   lastName: string;
   email: string;
@@ -16,24 +16,23 @@ export type UserConstructor = {
 
 const MINIMUM_CHARACTERS_PASSWORD = 5;
 
-export class UserEntity {
-  private id: UserId;
-  private name: string;
-  private lastName: string;
-  private email: string;
-  private password: string;
+export abstract class UserEntity {
+  protected id: EntityId;
+  protected name: string;
+  protected lastName: string;
+  protected email: string;
+  protected password: string;
+  protected readonly role: UserRoles;
 
   constructor({ id, name, lastName, email, password }: UserConstructor) {
-    this.id = id ?? randomUUID().toString();
+    this.id = id ?? new EntityId();
     this.name = name;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
-
-    this.validate();
   }
 
-  private validate() {
+  protected validate() {
     if (this.password.length < MINIMUM_CHARACTERS_PASSWORD) {
       throw new MinimumCharactersPasswordError(MINIMUM_CHARACTERS_PASSWORD);
     }
@@ -48,6 +47,10 @@ export class UserEntity {
 
     if (!this.email) {
       throw new EmptyFieldError('email');
+    }
+
+    if (!this.role) {
+      throw new EmptyFieldError('role');
     }
   }
 
@@ -71,7 +74,7 @@ export class UserEntity {
     this.validate();
   }
 
-  getId(): UserId {
+  getId(): EntityId {
     return this.id;
   }
 
@@ -89,5 +92,9 @@ export class UserEntity {
 
   getPassword(): string {
     return this.password;
+  }
+
+  getRole(): UserRoles {
+    return this.role;
   }
 }

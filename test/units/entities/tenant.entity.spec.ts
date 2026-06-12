@@ -1,17 +1,19 @@
-import { UserEntity } from '@/domain/entities';
+import { EntityId, TenantEntity } from '@/domain/entities';
 import {
   EmptyFieldError,
   MinimumCharactersPasswordError,
 } from '@/shared/errors';
 
-describe('UserEntity', () => {
+describe('TenantEntity', () => {
   const defaultValue = 'default';
-  const validUser = new UserEntity({
-    id: '6a1996fd-cf6a-4999-b9a6-a08a4a2516df',
+  const entityId = new EntityId();
+  const validUser = new TenantEntity({
+    id: entityId,
     name: 'mockedName',
     lastName: 'mockedLastName',
     email: 'mockedEmail',
     password: 'mockedPassword',
+    birthDate: '20020809',
   });
 
   describe('Success', () => {
@@ -20,36 +22,38 @@ describe('UserEntity', () => {
 
       expect(id).toBeDefined();
       expect(id).not.toBeNull();
-      expect(id).toBe('6a1996fd-cf6a-4999-b9a6-a08a4a2516df');
+      expect(entityId.equals(id)).toBeTruthy();
     });
   });
 
   describe('Errors', () => {
     it('Should throw error if password does not contain minimum characters', () => {
       expect(() => {
-        new UserEntity({
+        new TenantEntity({
           email: defaultValue,
           name: defaultValue,
           lastName: defaultValue,
+          birthDate: '20020809',
           password: '12',
         });
       }).toThrow(MinimumCharactersPasswordError);
     });
 
-    it.each(['name', 'lastName', 'email'])(
+    it.each(['name', 'lastName', 'email', 'birthDate'])(
       'Should throw error if %s is empty',
       (field) => {
         const input = {
-          id: defaultValue,
+          id: entityId,
           name: defaultValue,
           lastName: defaultValue,
           password: defaultValue,
           email: defaultValue,
+          birthDate: '20020809',
           [field]: null,
         };
 
         expect(() => {
-          new UserEntity(input);
+          new TenantEntity(input);
         }).toThrow(new EmptyFieldError(field));
       },
     );

@@ -4,3 +4,10 @@ export class CreateEntityError extends Error {
     this.name = 'CreateEntityError';
   }
 }
+
+export class PersistenceUserRoleError extends Error {
+  constructor() {
+    super('User persisted without role.');
+    this.name = 'PersistenceUserRoleError';
+  }
+}

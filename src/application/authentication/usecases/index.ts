@@ -1,1 +1,2 @@
-export * from './auth-librarian.use.case';
+export * from './auth-librarian.usecase';
+export * from './auth-tenant.usecase';

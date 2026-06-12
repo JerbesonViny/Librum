@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { AuthenticationController } from './authentication.controller';
-import { AuthLibrarianUseCase } from './usecases';
+import { AuthLibrarianUseCase, AuthTenantUseCase } from './usecases';
 import { USER_REPOSITORY } from '@/domain/contracts/repositories';
 import { UserRepository } from '@/infra/repositories/user.repository';
 
@@ -16,6 +16,7 @@ const UserRepositoryFactory = {
   providers: [
     // Use cases
     AuthLibrarianUseCase,
+    AuthTenantUseCase,
 
     // Repositories
     UserRepositoryFactory,

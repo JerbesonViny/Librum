@@ -2,7 +2,7 @@ import { AuthLibrarianUseCase } from '@/application/authentication/usecases';
 
 import * as authUtils from '@/shared/utils/auth.utils';
 import { UserNotFoundError, WrongPasswordError } from '@/shared';
-import { LibrarianEntity } from '@/domain/entities/librarian.entity';
+import { EntityId, LibrarianEntity } from '@/domain/entities';
 import { GetUserByEmail } from '@/domain/contracts/repositories';
 
 describe('AuthLibrarianUseCase', () => {
@@ -11,7 +11,7 @@ describe('AuthLibrarianUseCase', () => {
   let createHashSpy: jest.SpyInstance;
   let createTokenSpy: jest.SpyInstance;
 
-  const validId = '6a1996fd-cf6a-4999-b9a6-a08a4a2516df';
+  const validId = new EntityId('6a2b3fa1ed358eaafa29055e');
   const validEmail = 'mockedEmail';
   const mockedPassword = 'mockedPassword';
   const hashedPassword =
@@ -26,7 +26,7 @@ describe('AuthLibrarianUseCase', () => {
 
   beforeAll(() => {
     userRepository = {
-      getUserByEmail: jest.fn().mockImplementation((email: string) => {
+      getUserByEmail: jest.fn().mockImplementation(({ email }) => {
         if (email == validEmail) {
           return defaultEntity;
         }
@@ -59,13 +59,16 @@ describe('AuthLibrarianUseCase', () => {
         password: mockedPassword,
       });
 
-      expect(userRepository.getUserByEmail).toHaveBeenCalledWith(validEmail);
+      expect(userRepository.getUserByEmail).toHaveBeenCalledWith({
+        email: validEmail,
+        role: 'LIBRARIAN',
+      });
       expect(createHashSpy).toHaveBeenCalledWith(mockedPassword);
       expect(createHashSpy.mock.results[0].value).toBe(hashedPassword);
       expect(createTokenSpy).toHaveBeenCalledWith({
         payload: {
           userId: defaultEntity.getId(),
-          rule: 'LIBRARIAN',
+          role: 'LIBRARIAN',
         },
         privateKey: '123',
       });
@@ -87,7 +90,10 @@ describe('AuthLibrarianUseCase', () => {
           expect(err.message).toBe(new UserNotFoundError().message);
         });
 
-      expect(userRepository.getUserByEmail).toHaveBeenCalledWith('123');
+      expect(userRepository.getUserByEmail).toHaveBeenCalledWith({
+        email: '123',
+        role: 'LIBRARIAN',
+      });
       expect(userRepository.getUserByEmail.mock.results[0].value).toBeNull();
     });
 

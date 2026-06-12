@@ -15,7 +15,7 @@ describe('Authentication Controller', () => {
 
   beforeAll(async () => {
     connection = (await DatabaseConnector.getInstance()) as Db;
-    databaseSeeder = new DatabaseSeeder(connection as any);
+    databaseSeeder = new DatabaseSeeder(connection);
     await databaseSeeder.reset();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -33,15 +33,34 @@ describe('Authentication Controller', () => {
   });
 
   describe('Librarian', () => {
-    it('Should authenticate', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/auth/librarian')
-        .send({
-          email: 'mockedEmail',
-          password: 'mockedPassword',
-        });
+    describe('Success', () => {
+      it('Should authenticate', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/librarian')
+          .send({
+            email: 'mockedLibrarianEmail',
+            password: 'mockedPassword',
+          });
 
-      expect(response.body.token).toBeDefined();
+        const body = response.body;
+        expect(body.message).toBeUndefined();
+        expect(body.token).toBeDefined();
+      });
+    });
+
+    describe('Errors', () => {
+      it('Should throw error if user trying sign in wrong path', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/librarian')
+          .send({
+            email: 'mockedTenantEmail',
+            password: 'mockedPassword',
+          });
+
+        const body = response.body;
+        expect(body.message).toBe('User not found.');
+        expect(body.token).toBeUndefined();
+      });
     });
   });
 });

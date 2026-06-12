@@ -8,7 +8,7 @@ export class LibrarianGuard implements CanActivate {
     const token = request.headers?.authorization.replace('Bearer ', '');
     const decodedToken = decodeToken({ token });
 
-    if (!decodedToken || decodedToken?.rule != 'LIBRARIAN') {
+    if (!decodedToken || decodedToken?.role != 'LIBRARIAN') {
       throw new HttpException('Librarian access is required.', 401);
     }
 

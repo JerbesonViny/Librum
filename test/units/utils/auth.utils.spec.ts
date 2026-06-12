@@ -9,7 +9,7 @@ describe('Auth Utils', () => {
     it('Should decode token', () => {
       const expectedPayload = {
         id: '6a2b3fa1ed358eaafa29055e',
-        rule: 'LIBRARIAN',
+        role: 'LIBRARIAN',
         iat: 1781277254,
       };
       const decodedToken = decodeToken({

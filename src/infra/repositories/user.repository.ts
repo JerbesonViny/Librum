@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetUserByEmail } from '@/domain/contracts/repositories';
 import { UserEntity } from '@/domain/entities';
-import { MONGO_DB } from '../database/database.module';
+import { MONGO_DB } from '@/infra/database/database.module';
 import { Db } from 'mongodb';
 
 @Injectable()

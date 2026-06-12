@@ -2,8 +2,8 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "testEnvironment": "node",
-  "testMatch": ["<rootDir>/test/**/*.*-spec.ts"],
-  "setupFiles": ["<rootDir>/test/setup.ts"],
+  "testMatch": ["<rootDir>/test/**/*.*spec.ts"],
+  "setupFilesAfterEnv": ["<rootDir>/test/setup.ts"],
   "transform": {
     "^.+\\.(t|j)s$": [
       "ts-jest",

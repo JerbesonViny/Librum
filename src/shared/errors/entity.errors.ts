@@ -13,3 +13,10 @@ export class MinimumCharactersPasswordError extends Error {
     this.name = 'MinimumCharactersPasswordError';
   }
 }
+
+export class MissingAuthorError extends Error {
+  constructor() {
+    super('Book must have at least one author.');
+    this.name = 'MissingAuthorError';
+  }
+}

@@ -1,5 +1,5 @@
 import { Db, MongoClient } from 'mongodb';
-import { users } from '../seeds/users.seed';
+import { users, books } from '../seeds';
 
 export class DatabaseConnector {
   private static db: Db;
@@ -33,11 +33,17 @@ export class DatabaseSeeder {
   constructor(private readonly db: Db) {}
 
   async seedAll(): Promise<void> {
-    await Promise.allSettled([this.db.collection('users').insertMany(users)]);
+    await Promise.allSettled([
+      this.db.collection('users').insertMany(users),
+      this.db.collection('books').insertMany(books),
+    ]);
   }
 
   async clearAll(): Promise<void> {
-    await Promise.allSettled([this.db.collection('users').deleteMany()]);
+    await Promise.allSettled([
+      this.db.collection('users').deleteMany(),
+      this.db.collection('books').deleteMany(),
+    ]);
   }
 
   async reset(): Promise<void> {

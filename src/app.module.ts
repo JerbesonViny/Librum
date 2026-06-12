@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 
-import { winstonConfig } from '@/infra/logger/logger.config';
 import configuration from '@/infra/environments/environments.config';
-import { AuthenticationModule } from '@/application/authentication/authentication.module';
+import { winstonConfig } from '@/infra/logger/logger.config';
 import { DatabaseModule } from '@/infra/database/database.module';
+import { AuthenticationModule } from '@/application/authentication/authentication.module';
+import { BooksModule } from '@/application/books/books.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { DatabaseModule } from '@/infra/database/database.module';
     WinstonModule.forRoot(winstonConfig),
     DatabaseModule,
     AuthenticationModule,
+    BooksModule,
   ],
   controllers: [],
   providers: [],

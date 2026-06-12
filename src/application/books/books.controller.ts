@@ -1,12 +1,12 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 
 import { CreateBookInput } from './dto';
-import { CreateBookUsecase } from './usecases/create-book.usecase';
+import { CreateBookUseCase } from './usecases/create-book.usecase';
 import { JwtGuard, LibrarianGuard } from '@/infra/guards';
 
 @Controller('books')
 export class BooksController {
-  constructor(private readonly createBookUsecase: CreateBookUsecase) {}
+  constructor(private readonly createBookUsecase: CreateBookUseCase) {}
 
   @Post()
   @UseGuards(JwtGuard, LibrarianGuard)

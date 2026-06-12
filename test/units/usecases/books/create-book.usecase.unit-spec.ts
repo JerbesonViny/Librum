@@ -1,10 +1,10 @@
-import { CreateBookUsecase } from '@/application/books/usecases';
+import { CreateBookUseCase } from '@/application/books/usecases';
 import { CreateEntityError } from '@/shared';
 import { Create } from '@/domain/contracts/repositories';
 import { BookEntity, EntityId } from '@/domain/entities';
 
 describe('CreateBookUsecase', () => {
-  let useCase: CreateBookUsecase;
+  let useCase: CreateBookUseCase;
   let bookRepository: jest.Mocked<Create<BookEntity, EntityId>>;
 
   beforeAll(() => {
@@ -12,7 +12,7 @@ describe('CreateBookUsecase', () => {
       create: jest.fn().mockResolvedValue(null),
     };
 
-    useCase = new CreateBookUsecase(bookRepository);
+    useCase = new CreateBookUseCase(bookRepository);
   });
 
   afterEach(() => {

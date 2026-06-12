@@ -14,7 +14,7 @@ type Output = {
   bookId: string;
 };
 
-export class CreateBookUsecase {
+export class CreateBookUseCase {
   constructor(
     @Inject(BOOK_REPOSITORY)
     private readonly bookRepository: Create<BookEntity, EntityId>,

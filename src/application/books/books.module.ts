@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { BOOK_REPOSITORY } from '@/domain/contracts/repositories';
 import { BookRepository } from '@/infra/repositories/book.repository';
-import { CreateBookUsecase } from './usecases';
+import { CreateBookUseCase } from './usecases';
 import { BooksController } from './books.controller';
 
 const BookRepositoryFactory = {
@@ -14,7 +14,7 @@ const BookRepositoryFactory = {
   controllers: [BooksController],
   providers: [
     // Usecases
-    CreateBookUsecase,
+    CreateBookUseCase,
 
     // Repositories
     BookRepositoryFactory,

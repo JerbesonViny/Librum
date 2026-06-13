@@ -20,3 +20,24 @@ export class MissingAuthorError extends Error {
     this.name = 'MissingAuthorError';
   }
 }
+
+type CannotLessOrEqualsThanErrorConstructor = {
+  shouldBeGreatherThan: string;
+  target: string;
+};
+export class CannotLessOrEqualsThanError extends Error {
+  constructor({
+    shouldBeGreatherThan,
+    target,
+  }: CannotLessOrEqualsThanErrorConstructor) {
+    super(`${shouldBeGreatherThan} cannot be less or equals than ${target}.`);
+    this.name = 'CannotLessOrEqualsThanError';
+  }
+}
+
+export class BookAlreadyLoanError extends Error {
+  constructor() {
+    super('This book is already on loan.');
+    this.name = 'BookAlreadyLoanError';
+  }
+}

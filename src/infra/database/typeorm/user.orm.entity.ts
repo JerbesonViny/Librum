@@ -1,7 +1,8 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { EntityId, LibrarianEntity, TenantEntity } from '@/domain/entities';
 import { TenantOrmEntity } from './tenant.orm.entity';
 import { LibrarianOrmEntity } from './librarian.orm.entity';
+import { LoanOrmEntity } from './loan.orm.entity';
 
 @Entity('users')
 export class UserOrmEntity {
@@ -25,6 +26,9 @@ export class UserOrmEntity {
 
   @OneToOne(() => LibrarianOrmEntity, (librarian) => librarian.user)
   librarian?: LibrarianOrmEntity;
+
+  @OneToMany(() => LoanOrmEntity, (loan) => loan.user)
+  loans: LoanOrmEntity[];
 
   toDomain() {
     if (this.tenant) {

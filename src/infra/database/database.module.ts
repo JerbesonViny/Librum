@@ -7,6 +7,8 @@ import {
   TenantOrmEntity,
   LibrarianOrmEntity,
   AuthorOrmEntity,
+  LoanOrmEntity,
+  ReturnsLoanOrmEntity,
 } from './typeorm';
 
 @Module({
@@ -22,6 +24,8 @@ import {
         TenantOrmEntity,
         LibrarianOrmEntity,
         AuthorOrmEntity,
+        LoanOrmEntity,
+        ReturnsLoanOrmEntity,
       ],
       synchronize: process.env.NODE_ENV !== 'production',
     }),

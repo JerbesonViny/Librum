@@ -31,5 +31,10 @@ const AuthorRepositoryFactory = {
     BookRepositoryFactory,
     AuthorRepositoryFactory,
   ],
+  exports: [
+    BookRepositoryFactory,
+    AuthorRepositoryFactory,
+    TypeOrmModule.forFeature([BookOrmEntity, AuthorOrmEntity]),
+  ],
 })
 export class BooksModule {}

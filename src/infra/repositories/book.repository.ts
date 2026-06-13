@@ -2,12 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Create } from '@/domain/contracts/repositories';
+import {
+  Create,
+  FindOneBook,
+  FindOneBookInput,
+} from '@/domain/contracts/repositories';
 import { BookEntity, EntityId } from '@/domain/entities';
 import { BookOrmEntity } from '@/infra/database/typeorm';
 
 @Injectable()
-export class BookRepository implements Create<BookEntity, EntityId> {
+export class BookRepository
+  implements Create<BookEntity, EntityId>, FindOneBook
+{
   constructor(
     @InjectRepository(BookOrmEntity)
     private readonly repository: Repository<BookOrmEntity>,
@@ -27,5 +33,20 @@ export class BookRepository implements Create<BookEntity, EntityId> {
     }
 
     return entity.getId();
+  }
+
+  async findOne(input: FindOneBookInput): Promise<BookEntity | null> {
+    const query = this.repository
+      .createQueryBuilder('book')
+      .where('book.id = :id', { id: input.id.toString() })
+      .innerJoinAndSelect('book.authors', 'authors');
+
+    const book = await query.getOne();
+
+    if (!book) {
+      return null;
+    }
+
+    return book.toDomain();
   }
 }

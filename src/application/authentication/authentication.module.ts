@@ -33,6 +33,6 @@ const UserRepositoryFactory = {
     // Repositories
     UserRepositoryFactory,
   ],
-  exports: [],
+  exports: [UserRepositoryFactory],
 })
 export class AuthenticationModule {}

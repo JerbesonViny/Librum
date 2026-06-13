@@ -6,6 +6,7 @@ import {
   librarians,
   tenants,
   users,
+  loans,
 } from '../seeds';
 
 export class DatabaseConnector {
@@ -41,6 +42,7 @@ export class DatabaseSeeder {
       await this.seedBooks(client);
       await this.seedAuthors(client);
       await this.seedAuthorBook(client);
+      await this.seedLoans(client);
     } finally {
       client.release();
     }
@@ -49,6 +51,8 @@ export class DatabaseSeeder {
   async clearAll(): Promise<void> {
     const client = await this.pool.connect();
     const tablesToDelete = [
+      'returns',
+      'loans',
       'librarians',
       'tenants',
       'users',
@@ -133,6 +137,17 @@ export class DatabaseSeeder {
          VALUES ($1, $2)
          ON CONFLICT (book_id, author_id) DO NOTHING`,
         [entity.book_id, entity.author_id],
+      );
+    }
+  }
+
+  private async seedLoans(client: PoolClient): Promise<void> {
+    for (const loan of loans) {
+      await client.query(
+        `INSERT INTO loans (id, book_id, user_id, due_date, created_at)
+         VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT (id) DO NOTHING`,
+        [loan.id, loan.book_id, loan.user_id, loan.due_date, loan.created_at],
       );
     }
   }

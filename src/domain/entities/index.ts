@@ -4,3 +4,4 @@ export * from './book.entity';
 export * from './id.entity';
 export * from './tenant.entity';
 export * from './author.entity';
+export * from './loan.entity';

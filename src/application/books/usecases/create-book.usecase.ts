@@ -1,13 +1,18 @@
 import { Inject } from '@nestjs/common';
-import { Create, BOOK_REPOSITORY } from '@/domain/contracts/repositories';
+import {
+  Create,
+  BOOK_REPOSITORY,
+  AUTHOR_REPOSITORY,
+  FindManyAuthors,
+} from '@/domain/contracts/repositories';
 import { BookEntity, EntityId } from '@/domain/entities';
-import { CreateEntityError } from '@/shared/errors';
+import { CreateEntityError, EntityNotFound } from '@/shared/errors';
 
 type Input = {
   title: string;
   description?: string;
   releaseDate: string;
-  authors: string[];
+  authorIds: string[];
 };
 
 type Output = {
@@ -18,14 +23,22 @@ export class CreateBookUseCase {
   constructor(
     @Inject(BOOK_REPOSITORY)
     private readonly bookRepository: Create<BookEntity, EntityId>,
+    @Inject(AUTHOR_REPOSITORY)
+    private readonly authorRepository: FindManyAuthors,
   ) {}
 
   async perform({
     title,
-    authors,
     releaseDate,
+    authorIds,
     ...rest
   }: Input): Promise<Output> {
+    const authors = await this.authorRepository.findMany({ authorIds });
+
+    if (!authors) {
+      throw new EntityNotFound('Author');
+    }
+
     const book = new BookEntity({
       title,
       authors,

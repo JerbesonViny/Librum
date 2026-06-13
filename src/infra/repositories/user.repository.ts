@@ -1,72 +1,52 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import {
   GetUserByEmail,
   GetUserByEmailInput,
 } from '@/domain/contracts/repositories';
-import { LibrarianEntity, TenantEntity, UserRoles } from '@/domain/entities';
-import { MONGO_DB } from '@/infra/database/database.module';
-import { Db, ObjectId } from 'mongodb';
-import { PersistenceUserRoleError } from '@/shared';
-
-type UserPersistence = {
-  _id: ObjectId;
-  name: string;
-  lastName: string;
-  email: string;
-  password: string;
-  role: UserRoles;
-  birthDate?: string;
-};
-
-type TenantPersistence = UserPersistence & { birthDate: string };
+import { LibrarianEntity, TenantEntity } from '@/domain/entities';
+import { UserOrmEntity } from '@/infra/database/typeorm';
 
 type UserEntities = TenantEntity | LibrarianEntity;
 
 @Injectable()
 export class UserRepository implements GetUserByEmail<UserEntities> {
-  private readonly collectionName = 'users';
-
   constructor(
-    @Inject(MONGO_DB)
-    private readonly db: Db,
+    @InjectRepository(UserOrmEntity)
+    private readonly repository: Repository<UserOrmEntity>,
   ) {}
 
   async getUserByEmail(
     input: GetUserByEmailInput,
   ): Promise<UserEntities | null> {
     const query = this.buildGetUserByEmailQuery(input);
-    const user = await this.db
-      .collection(this.collectionName)
-      .findOne<UserPersistence>(query);
+
+    const user = await query.getOne();
 
     if (!user) {
       return null;
     }
 
-    if (!user.role) {
-      throw new PersistenceUserRoleError();
-    }
-
-    return this.userFactory(user);
+    return user.toDomain();
   }
 
-  private buildGetUserByEmailQuery({ email, ...input }: GetUserByEmailInput) {
-    const query: Record<string, any> = { email };
+  private buildGetUserByEmailQuery({ email, role }: GetUserByEmailInput) {
+    let baseQuery = this.repository.createQueryBuilder('user');
 
-    if (input.role) {
-      query.role = input.role;
+    if (role) {
+      if (role == 'TENANT') {
+        baseQuery = baseQuery.innerJoinAndSelect('user.tenant', 'tenant');
+      } else if (role == 'LIBRARIAN') {
+        baseQuery = baseQuery.innerJoinAndSelect('user.librarian', 'librarian');
+      }
+    } else {
+      baseQuery = baseQuery
+        .leftJoinAndSelect('user.tenant', 'tenant')
+        .leftJoinAndSelect('user.librarian', 'librarian');
     }
 
-    return query;
-  }
-
-  private userFactory(user: UserPersistence): UserEntities {
-    const factoryByRole = {
-      LIBRARIAN: (data: UserPersistence) => new LibrarianEntity(data),
-      TENANT: (data: UserPersistence) =>
-        new TenantEntity(data as TenantPersistence),
-    };
-
-    return factoryByRole[user.role](user);
+    return baseQuery.where('user.email = :email', { email: email }).select();
   }
 }

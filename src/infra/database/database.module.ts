@@ -1,28 +1,30 @@
-import { Global, Module } from '@nestjs/common';
-import { MongoClient, Db } from 'mongodb';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-export const MONGO_DB = 'MONGO_DB';
+import {
+  BookOrmEntity,
+  UserOrmEntity,
+  TenantOrmEntity,
+  LibrarianOrmEntity,
+  AuthorOrmEntity,
+} from './typeorm';
 
-@Global()
 @Module({
-  providers: [
-    {
-      provide: MONGO_DB,
-      useFactory: async (): Promise<Db> => {
-        const uri =
-          process.env.MONGODB_URI ?? 'mongodb://mongodb:27017/library';
-        const client = new MongoClient(uri, {
-          connectTimeoutMS: 50000,
-          serverSelectionTimeoutMS: 30000,
-          retryWrites: true,
-          retryReads: true,
-        });
-        await client.connect();
-        const dbName = new URL(uri).pathname.replace('/', '');
-        return client.db(dbName);
-      },
-    },
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url:
+        process.env.POSTGRES_URI ??
+        'postgresql://postgres:postgres@localhost:5432/library',
+      entities: [
+        UserOrmEntity,
+        BookOrmEntity,
+        TenantOrmEntity,
+        LibrarianOrmEntity,
+        AuthorOrmEntity,
+      ],
+      synchronize: process.env.NODE_ENV !== 'production',
+    }),
   ],
-  exports: [MONGO_DB],
 })
 export class DatabaseModule {}

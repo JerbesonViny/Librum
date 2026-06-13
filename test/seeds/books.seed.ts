@@ -1,11 +1,9 @@
-import { ObjectId } from 'mongodb';
-
 export const books = [
   {
-    _id: new ObjectId('6a2b3fa1ed358eaafa29055e'),
+    id: 'a0000000-0000-4000-a000-000000000001',
     title: 'mockedTitle',
     description: 'mockedDescription',
     authors: ['mockedAuthorOne', 'mockedAuthorTwo'],
-    releaseDate: '20240502',
+    release_date: '20240502',
   },
 ];

@@ -1,18 +1,24 @@
 import { CreateBookUseCase } from '@/application/books/usecases';
 import { CreateEntityError } from '@/shared';
-import { Create } from '@/domain/contracts/repositories';
-import { BookEntity, EntityId } from '@/domain/entities';
+import { Create, FindManyAuthors } from '@/domain/contracts/repositories';
+import { AuthorEntity, BookEntity, EntityId } from '@/domain/entities';
 
 describe('CreateBookUsecase', () => {
   let useCase: CreateBookUseCase;
   let bookRepository: jest.Mocked<Create<BookEntity, EntityId>>;
+  let authorRepository: jest.Mocked<FindManyAuthors>;
 
   beforeAll(() => {
     bookRepository = {
       create: jest.fn().mockResolvedValue(null),
     };
+    authorRepository = {
+      findMany: jest
+        .fn()
+        .mockResolvedValue([new AuthorEntity({ name: 'mock' })]),
+    };
 
-    useCase = new CreateBookUseCase(bookRepository);
+    useCase = new CreateBookUseCase(bookRepository, authorRepository);
   });
 
   afterEach(() => {
@@ -25,7 +31,7 @@ describe('CreateBookUsecase', () => {
         .perform({
           title: 'example',
           description: 'example',
-          authors: ['example'],
+          authorIds: ['exampleId'],
           releaseDate: '20100202',
         })
         .catch((err: Error) => {

@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { Db } from 'mongodb';
+import { Pool } from 'pg';
 import { App } from 'supertest/types';
 
 import { AppModule } from '@/app.module';
@@ -15,11 +15,11 @@ import {
 
 describe('Books Controller', () => {
   let app: INestApplication<App>;
-  let connection: Db;
+  let connection: Pool;
   let databaseSeeder: DatabaseSeeder;
 
   beforeAll(async () => {
-    connection = (await DatabaseConnector.getInstance()) as Db;
+    connection = DatabaseConnector.getInstance();
     databaseSeeder = new DatabaseSeeder(connection);
     await databaseSeeder.reset();
 
@@ -47,7 +47,7 @@ describe('Books Controller', () => {
             title: 'example title',
             description: 'example description',
             releaseDate: '20250802',
-            authors: ['Heisenberg'],
+            authorIds: ['a0000000-0000-4000-a000-000000000001'],
           });
 
         const bookId = response.body.bookId;
@@ -67,7 +67,7 @@ describe('Books Controller', () => {
             title: 'example title',
             description: 'example description',
             releaseDate: '20250802',
-            authors: ['Heisenberg'],
+            authorIds: ['a0000000-0000-4000-a000-000000000001'],
           });
 
         const body = response.body;

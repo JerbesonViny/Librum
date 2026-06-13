@@ -1,22 +1,31 @@
-import { ObjectId } from 'mongodb';
-
 export const users = [
   {
-    _id: new ObjectId('6a2b3fa1ed358eaafa29055e'),
+    id: 'a0000000-0000-4000-a000-000000000001',
     name: 'mockedLibrarianName',
-    lastName: 'mockedLibrarianLastName',
+    last_name: 'mockedLibrarianLastName',
     email: 'mockedLibrarianEmail',
-    role: 'LIBRARIAN',
     password:
       'cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f',
   },
   {
-    _id: new ObjectId('6a2c2cb5f9a1a35f8615c839'),
+    id: 'a0000000-0000-4000-a000-000000000002',
     name: 'mockedTenantName',
-    lastName: 'mockedTenantLastName',
+    last_name: 'mockedTenantLastName',
     email: 'mockedTenantEmail',
-    role: 'TENANT',
     password:
       'cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f',
+  },
+];
+
+export const librarians = [
+  {
+    user_id: 'a0000000-0000-4000-a000-000000000001',
+  },
+];
+
+export const tenants = [
+  {
+    user_id: 'a0000000-0000-4000-a000-000000000002',
+    birth_date: '20020902',
   },
 ];

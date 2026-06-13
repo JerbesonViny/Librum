@@ -1,10 +1,10 @@
 import { EmptyFieldError, MissingAuthorError } from '@/shared';
-import { EntityId } from './id.entity';
+import { EntityId, AuthorEntity } from '.';
 
 export type BookConstructor = {
   id?: EntityId;
   title: string;
-  authors: string[];
+  authors: AuthorEntity[];
   releaseDate: string;
   description?: string;
 };
@@ -12,7 +12,7 @@ export type BookConstructor = {
 export class BookEntity {
   private id: EntityId;
   private title: string;
-  private authors: string[];
+  private authors: AuthorEntity[];
   private releaseDate: string;
   private description?: string;
 
@@ -67,7 +67,7 @@ export class BookEntity {
     this.description = description;
   }
 
-  setAuthors(authors: string[]) {
+  setAuthors(authors: AuthorEntity[]) {
     this.authors = authors;
     this.validate();
   }

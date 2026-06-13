@@ -1,20 +1,20 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
+import { Pool } from 'pg';
 
 import { AppModule } from '@/app.module';
 import { App } from 'supertest/types';
 import { HttpExceptionFilter } from '@/infra/filters/http.filter';
 import { DatabaseConnector, DatabaseSeeder } from '../../utils/seeder';
-import { Db } from 'mongodb';
 
 describe('Authentication Controller', () => {
   let app: INestApplication<App>;
-  let connection: Db;
+  let connection: Pool;
   let databaseSeeder: DatabaseSeeder;
 
   beforeAll(async () => {
-    connection = (await DatabaseConnector.getInstance()) as Db;
+    connection = DatabaseConnector.getInstance();
     databaseSeeder = new DatabaseSeeder(connection);
     await databaseSeeder.reset();
 

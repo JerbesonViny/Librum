@@ -57,15 +57,13 @@ describe('Loans Controller', () => {
     });
 
     describe('Errors', () => {
-      it.skip('Should throw error if librarian user was trying to create a new loan', async () => {
+      it('Should throw error if librarian user was trying to create a new loan', async () => {
         const response = await request(app.getHttpServer())
           .post('/loan')
           .set({ authorization: infiniteLibrarianJwtTokenMock })
           .send({
-            title: 'example title',
-            description: 'example description',
-            releaseDate: '20250802',
-            authorIds: ['a0000000-0000-4000-a000-000000000001'],
+            bookId: 'a0000000-0000-4000-a000-000000000002',
+            userId: 'a0000000-0000-4000-a000-000000000002',
           });
 
         const body = response.body;
@@ -77,7 +75,7 @@ describe('Loans Controller', () => {
       it('Should throw error if book is already on loan', async () => {
         const response = await request(app.getHttpServer())
           .post('/loan')
-          .set({ authorization: infiniteLibrarianJwtTokenMock })
+          .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000002',
             userId: 'a0000000-0000-4000-a000-000000000002',
@@ -92,7 +90,7 @@ describe('Loans Controller', () => {
       it('Should throw error if book is not found', async () => {
         const response = await request(app.getHttpServer())
           .post('/loan')
-          .set({ authorization: infiniteLibrarianJwtTokenMock })
+          .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-100000000001',
             userId: 'a0000000-0000-4000-a000-000000000002',
@@ -107,7 +105,7 @@ describe('Loans Controller', () => {
       it('Should throw error if user is not found', async () => {
         const response = await request(app.getHttpServer())
           .post('/loan')
-          .set({ authorization: infiniteLibrarianJwtTokenMock })
+          .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000001',
             userId: 'a0000000-0000-4000-a000-100000000002',

@@ -24,5 +24,6 @@
     "!src/app.module.ts",
     "!src/application/*/*.module.ts"
   ],
+  "coveragePathIgnorePatterns": ["(index)\\.(js|ts)$"],
   "coverageDirectory": "<rootDir>/coverage"
 }

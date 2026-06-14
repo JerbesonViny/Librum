@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
   Create,
+  FindOneLoan,
+  FindOneLoanInput,
   GetPendingLoan,
   GetPendingLoanInput,
 } from '@/domain/contracts/repositories';
@@ -11,7 +13,7 @@ import { EntityId, LoanEntity } from '@/domain/entities';
 
 @Injectable()
 export class LoanRepository
-  implements GetPendingLoan, Create<LoanEntity, EntityId>
+  implements GetPendingLoan, FindOneLoan, Create<LoanEntity, EntityId>
 {
   constructor(
     @InjectRepository(LoanOrmEntity)
@@ -26,6 +28,23 @@ export class LoanRepository
       .andWhere('return.loan_id IS NULL');
 
     return query.getExists();
+  }
+
+  async findOne(input: FindOneLoanInput): Promise<LoanEntity | null> {
+    const query = this.repository
+      .createQueryBuilder('loan')
+      .where('loan.id = :id', { id: input.id.toString() })
+      .innerJoinAndSelect('loan.user', 'user')
+      .innerJoinAndSelect('loan.book', 'book')
+      .innerJoinAndSelect('book.authors', 'authors');
+
+    const loan = await query.getOne();
+
+    if (!loan) {
+      return null;
+    }
+
+    return loan.toDomain();
   }
 
   async create(entity: LoanEntity): Promise<EntityId | null> {

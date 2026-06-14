@@ -7,7 +7,7 @@ import {
   PrimaryColumn,
   Column,
 } from 'typeorm';
-import { EntityId } from '@/domain/entities';
+import { EntityId, LoanEntity } from '@/domain/entities';
 import { BookOrmEntity } from './book.orm.entity';
 import { UserOrmEntity } from './user.orm.entity';
 import { ReturnsLoanOrmEntity } from './returns.orm.entity';
@@ -33,4 +33,17 @@ export class LoanOrmEntity {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  toDomain() {
+    const book = this.book.toDomain();
+    const user: any = this.user.toDomain();
+
+    return new LoanEntity({
+      id: this.id,
+      book,
+      tenant: user,
+      createdAt: this.createdAt,
+      dueDate: this.dueDate,
+    });
+  }
 }

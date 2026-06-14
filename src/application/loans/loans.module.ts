@@ -32,5 +32,6 @@ const LoanRepositoryFactory = {
     // Repositories
     LoanRepositoryFactory,
   ],
+  exports: [LoanRepositoryFactory],
 })
 export class LoansModule {}

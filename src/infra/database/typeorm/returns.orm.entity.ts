@@ -5,7 +5,7 @@ import {
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { EntityId } from '@/domain/entities';
+import { EntityId, ReturnsEntity } from '@/domain/entities';
 import { LoanOrmEntity } from './loan.orm.entity';
 
 @Entity('returns')
@@ -19,4 +19,12 @@ export class ReturnsLoanOrmEntity {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  toDomain() {
+    return new ReturnsEntity({
+      id: this.id,
+      loan: this.loan.toDomain(),
+      createdAt: this.createdAt,
+    });
+  }
 }

@@ -7,6 +7,7 @@ import {
   tenants,
   users,
   loans,
+  returns,
 } from '../seeds';
 
 export class DatabaseConnector {
@@ -43,6 +44,7 @@ export class DatabaseSeeder {
       await this.seedAuthors(client);
       await this.seedAuthorBook(client);
       await this.seedLoans(client);
+      await this.seedReturns(client);
     } finally {
       client.release();
     }
@@ -148,6 +150,17 @@ export class DatabaseSeeder {
          VALUES ($1, $2, $3, $4, $5)
          ON CONFLICT (id) DO NOTHING`,
         [loan.id, loan.book_id, loan.user_id, loan.due_date, loan.created_at],
+      );
+    }
+  }
+
+  private async seedReturns(client: PoolClient): Promise<void> {
+    for (const entity of returns) {
+      await client.query(
+        `INSERT INTO returns (id, loan_id, created_at)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (id) DO NOTHING`,
+        [entity.id, entity.loan_id, entity.created_at],
       );
     }
   }

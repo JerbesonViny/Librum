@@ -41,3 +41,10 @@ export class BookAlreadyLoanError extends Error {
     this.name = 'BookAlreadyLoanError';
   }
 }
+
+export class BookAlreadyReturnedError extends Error {
+  constructor() {
+    super('This book has already been returned.');
+    this.name = 'BookAlreadyReturnedError';
+  }
+}

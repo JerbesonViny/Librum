@@ -9,6 +9,7 @@ import { DatabaseModule } from '@/infra/database/database.module';
 import { AuthenticationModule } from '@/application/authentication/authentication.module';
 import { BooksModule } from '@/application/books/books.module';
 import { LoansModule } from '@/application/loans/loans.module';
+import { ReturnsModule } from '@/application/returns/returns.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LoansModule } from '@/application/loans/loans.module';
     AuthenticationModule,
     BooksModule,
     LoansModule,
+    ReturnsModule,
   ],
   controllers: [],
   providers: [],

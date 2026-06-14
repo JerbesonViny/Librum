@@ -1,41 +1,31 @@
-import {
-  AuthorEntity,
-  BookConstructor,
-  BookEntity,
-  EntityId,
-} from '@/domain/entities';
+import { BookConstructor, BookEntity, EntityId } from '@/domain/entities';
 import { EmptyFieldError, MissingAuthorError } from '@/shared';
+import { validAuthorMock, validBookMock } from '../../mocks';
 
 describe('BookEntity', () => {
-  const validAuthor = new AuthorEntity({ name: 'mock' });
-  const validBook = new BookEntity({
-    id: new EntityId('6a2b3fa1ed358eaafa29055e'),
-    title: 'mockedTitle',
-    releaseDate: '20260202',
-    authors: [validAuthor],
-  });
-
   describe('Success', () => {
     it('Should update all fields', () => {
-      const book = validBook.copy();
-      const author = validAuthor.copy();
+      const book = validBookMock.copy();
+      const author = validAuthorMock.copy();
       author.setName('modified author');
 
-      expect(book.getId().toString()).not.toBe(validBook.getId().toString());
-      expect(book.getTitle()).toBe(validBook.getTitle());
-      expect(book.getDescription()).toBe(validBook.getDescription());
-      expect(book.getReleaseDate()).toBe(validBook.getReleaseDate());
-      expect(book.getAuthors()).toBe(validBook.getAuthors());
+      expect(book.getId().toString()).not.toBe(
+        validBookMock.getId().toString(),
+      );
+      expect(book.getTitle()).toBe(validBookMock.getTitle());
+      expect(book.getDescription()).toBe(validBookMock.getDescription());
+      expect(book.getReleaseDate()).toBe(validBookMock.getReleaseDate());
+      expect(book.getAuthors()).toBe(validBookMock.getAuthors());
 
       book.setTitle('new title');
       book.setDescription('new description');
       book.setReleaseDate('20220101');
       book.setAuthors([author]);
 
-      expect(book.getTitle()).not.toBe(validBook.getTitle());
-      expect(book.getDescription()).not.toBe(validBook.getDescription());
-      expect(book.getReleaseDate()).not.toBe(validBook.getReleaseDate());
-      expect(book.getAuthors()).not.toBe(validBook.getAuthors());
+      expect(book.getTitle()).not.toBe(validBookMock.getTitle());
+      expect(book.getDescription()).not.toBe(validBookMock.getDescription());
+      expect(book.getReleaseDate()).not.toBe(validBookMock.getReleaseDate());
+      expect(book.getAuthors()).not.toBe(validBookMock.getAuthors());
 
       expect(book).toEqual({
         id: expect.any(EntityId),
@@ -48,7 +38,7 @@ describe('BookEntity', () => {
 
     it('Should update description to undefined', () => {
       const book = {
-        ...validBook,
+        ...validBookMock,
         description: 'test',
       } as unknown as BookConstructor;
       const entity = new BookEntity(book);
@@ -62,7 +52,7 @@ describe('BookEntity', () => {
 
   describe('Errors', () => {
     it('Should throw error if authors is missing', () => {
-      const book = validBook.copy();
+      const book = validBookMock.copy();
 
       expect(() => {
         book.setAuthors([]);
@@ -73,7 +63,7 @@ describe('BookEntity', () => {
       'Should throw error if %s is empty',
       (field) => {
         const book = {
-          ...validBook,
+          ...validBookMock,
           [field]: null,
         } as unknown as BookConstructor;
 

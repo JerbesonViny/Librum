@@ -1,28 +1,20 @@
-import { EntityId, TenantEntity } from '@/domain/entities';
+import { TenantEntity } from '@/domain/entities';
 import {
   EmptyFieldError,
   MinimumCharactersPasswordError,
 } from '@/shared/errors';
+import { entityIdMock, validTenantMock } from '../../mocks';
 
 describe('TenantEntity', () => {
   const defaultValue = 'default';
-  const entityId = new EntityId();
-  const validUser = new TenantEntity({
-    id: entityId,
-    name: 'mockedName',
-    lastName: 'mockedLastName',
-    email: 'mockedEmail',
-    password: 'mockedPassword',
-    birthDate: '20020809',
-  });
 
   describe('Success', () => {
     it('Should have id field', () => {
-      const id = validUser.getId();
+      const id = validTenantMock.getId();
 
       expect(id).toBeDefined();
       expect(id).not.toBeNull();
-      expect(entityId.equals(id)).toBeTruthy();
+      expect(entityIdMock.equals(id)).toBeTruthy();
     });
   });
 
@@ -43,7 +35,7 @@ describe('TenantEntity', () => {
       'Should throw error if %s is empty',
       (field) => {
         const input = {
-          id: entityId,
+          id: entityIdMock,
           name: defaultValue,
           lastName: defaultValue,
           password: defaultValue,

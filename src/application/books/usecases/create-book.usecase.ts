@@ -35,7 +35,7 @@ export class CreateBookUseCase {
   }: Input): Promise<Output> {
     const authors = await this.authorRepository.findMany({ authorIds });
 
-    if (!authors) {
+    if (!authors?.length) {
       throw new EntityNotFound('Author');
     }
 

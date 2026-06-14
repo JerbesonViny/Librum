@@ -12,6 +12,7 @@ import {
   infiniteLibrarianJwtTokenMock,
   infiniteTenantJwtTokenMock,
 } from '../../mocks/auth.mocks';
+import { EmptyFieldError } from '../../../src/shared';
 
 describe('Loans Controller', () => {
   let app: INestApplication<App>;
@@ -57,6 +58,34 @@ describe('Loans Controller', () => {
     });
 
     describe('Errors', () => {
+      it('Should throw error if bookId is undefined', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/loan')
+          .set({ authorization: infiniteTenantJwtTokenMock })
+          .send({
+            userId: 'a0000000-0000-4000-a000-000000000001',
+          });
+
+        const loanId = response.body.loanId;
+        const messageError = response.body?.message;
+        expect(messageError).toBe(new EmptyFieldError('bookId').message);
+        expect(loanId).toBeUndefined();
+      });
+
+      it('Should throw error if userId is undefined', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/loan')
+          .set({ authorization: infiniteTenantJwtTokenMock })
+          .send({
+            bookId: 'a0000000-0000-4000-a000-000000000001',
+          });
+
+        const loanId = response.body.loanId;
+        const messageError = response.body?.message;
+        expect(messageError).toBe(new EmptyFieldError('userId').message);
+        expect(loanId).toBeUndefined();
+      });
+
       it('Should throw error if librarian user was trying to create a new loan', async () => {
         const response = await request(app.getHttpServer())
           .post('/loan')

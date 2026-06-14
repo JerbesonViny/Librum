@@ -34,7 +34,7 @@ describe('Authentication Controller', () => {
 
   describe('Librarian', () => {
     describe('Success', () => {
-      it('Should authenticate', async () => {
+      it('Should authenticate librarian user', async () => {
         const response = await request(app.getHttpServer())
           .post('/auth/librarian')
           .send({
@@ -46,14 +46,40 @@ describe('Authentication Controller', () => {
         expect(body.message).toBeUndefined();
         expect(body.token).toBeDefined();
       });
+
+      it('Should authenticate tenant user', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/tenant')
+          .send({
+            email: 'mockedTenantEmail',
+            password: 'mockedPassword',
+          });
+
+        const body = response.body;
+        expect(body.message).toBeUndefined();
+        expect(body.token).toBeDefined();
+      });
     });
 
     describe('Errors', () => {
-      it('Should throw error if user trying sign in wrong path', async () => {
+      it('Should throw error if tenant user trying sign in wrong path', async () => {
         const response = await request(app.getHttpServer())
           .post('/auth/librarian')
           .send({
             email: 'mockedTenantEmail',
+            password: 'mockedPassword',
+          });
+
+        const body = response.body;
+        expect(body.message).toBe('User not found.');
+        expect(body.token).toBeUndefined();
+      });
+
+      it('Should throw error if librarian user trying sign in wrong path', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/tenant')
+          .send({
+            email: 'mockedLibrarianEmail',
             password: 'mockedPassword',
           });
 

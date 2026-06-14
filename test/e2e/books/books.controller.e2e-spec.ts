@@ -12,6 +12,7 @@ import {
   infiniteLibrarianJwtTokenMock,
   infiniteTenantJwtTokenMock,
 } from '../../mocks/auth.mocks';
+import { EntityNotFound } from '../../../src/shared';
 
 describe('Books Controller', () => {
   let app: INestApplication<App>;
@@ -59,6 +60,23 @@ describe('Books Controller', () => {
     });
 
     describe('Errors', () => {
+      it('Should throw error if authors not exists', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/books')
+          .set({ authorization: infiniteLibrarianJwtTokenMock })
+          .send({
+            title: 'example title',
+            description: 'example description',
+            releaseDate: '20250802',
+            authorIds: ['a0000000-0000-4000-a000-100000000001'],
+          });
+
+        const bookId = response.body.bookId;
+        const messageError = response.body?.message;
+        expect(messageError).toBe(new EntityNotFound('Author').message);
+        expect(bookId).toBeUndefined();
+      });
+
       it('Should throw error if tenant user was trying to create a new book', async () => {
         const response = await request(app.getHttpServer())
           .post('/books')

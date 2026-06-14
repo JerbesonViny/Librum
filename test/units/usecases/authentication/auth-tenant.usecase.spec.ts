@@ -1,13 +1,13 @@
-import { AuthLibrarianUseCase } from '@/application/authentication/usecases';
+import { AuthTenantUseCase } from '@/application/authentication/usecases';
 
 import * as authUtils from '@/shared/utils/auth.utils';
 import { UserNotFoundError, WrongPasswordError } from '@/shared';
-import { EntityId, LibrarianEntity } from '@/domain/entities';
+import { EntityId, TenantEntity } from '@/domain/entities';
 import { GetUserByEmail } from '@/domain/contracts/repositories';
 
-describe('AuthLibrarianUseCase', () => {
-  let useCase: AuthLibrarianUseCase;
-  let userRepository: jest.Mocked<GetUserByEmail<LibrarianEntity>>;
+describe('AuthTenantUseCase', () => {
+  let useCase: AuthTenantUseCase;
+  let userRepository: jest.Mocked<GetUserByEmail<TenantEntity>>;
   let createHashSpy: jest.SpyInstance;
   let createTokenSpy: jest.SpyInstance;
 
@@ -16,12 +16,13 @@ describe('AuthLibrarianUseCase', () => {
   const mockedPassword = 'mockedPassword';
   const hashedPassword =
     'cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f';
-  const defaultEntity = new LibrarianEntity({
+  const defaultEntity = new TenantEntity({
     id: validId,
     name: 'mockedName',
     lastName: 'mockedLastName',
     email: validEmail,
     password: hashedPassword,
+    birthDate: '20200101',
   });
 
   beforeAll(() => {
@@ -38,7 +39,7 @@ describe('AuthLibrarianUseCase', () => {
       get: jest.fn().mockReturnValue('123'),
     };
 
-    useCase = new AuthLibrarianUseCase(userRepository, configService);
+    useCase = new AuthTenantUseCase(userRepository, configService);
   });
 
   beforeEach(() => {
@@ -61,14 +62,14 @@ describe('AuthLibrarianUseCase', () => {
 
       expect(userRepository.getUserByEmail).toHaveBeenCalledWith({
         email: validEmail,
-        role: 'LIBRARIAN',
+        role: 'TENANT',
       });
       expect(createHashSpy).toHaveBeenCalledWith(mockedPassword);
       expect(createHashSpy.mock.results[0].value).toBe(hashedPassword);
       expect(createTokenSpy).toHaveBeenCalledWith({
         payload: {
           userId: defaultEntity.getId(),
-          role: 'LIBRARIAN',
+          role: 'TENANT',
         },
         privateKey: '123',
       });
@@ -103,7 +104,7 @@ describe('AuthLibrarianUseCase', () => {
 
       expect(userRepository.getUserByEmail).toHaveBeenCalledWith({
         email: '123',
-        role: 'LIBRARIAN',
+        role: 'TENANT',
       });
       expect(userRepository.getUserByEmail.mock.results[0].value).toBeNull();
     });

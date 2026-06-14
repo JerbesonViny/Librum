@@ -10,6 +10,7 @@ import { AuthenticationModule } from '@/application/authentication/authenticatio
 import { BooksModule } from '@/application/books/books.module';
 import { LoansModule } from '@/application/loans/loans.module';
 import { ReturnsModule } from '@/application/returns/returns.module';
+import { AuthorsModule } from '@/application/authors/authors.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ReturnsModule } from '@/application/returns/returns.module';
     WinstonModule.forRoot(winstonConfig),
     DatabaseModule,
     AuthenticationModule,
+    AuthorsModule,
     BooksModule,
     LoansModule,
     ReturnsModule,

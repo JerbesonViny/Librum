@@ -1,0 +1,110 @@
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import request from 'supertest';
+import { Pool } from 'pg';
+import { App } from 'supertest/types';
+
+import { AppModule } from '@/app.module';
+import { HttpExceptionFilter } from '@/infra/filters/http.filter';
+import { EntityId } from '@/domain/entities';
+import { DatabaseConnector, DatabaseSeeder } from '../../utils/seeder';
+import {
+  infiniteLibrarianJwtTokenMock,
+  infiniteTenantJwtTokenMock,
+} from '../../mocks/auth.mocks';
+
+describe('Authors Controller', () => {
+  let app: INestApplication<App>;
+  let connection: Pool;
+  let databaseSeeder: DatabaseSeeder;
+
+  beforeAll(async () => {
+    connection = DatabaseConnector.getInstance();
+    databaseSeeder = new DatabaseSeeder(connection);
+    await databaseSeeder.reset();
+
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new HttpExceptionFilter());
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+    await DatabaseConnector.close();
+  });
+
+  describe('Create', () => {
+    describe('Success', () => {
+      it('Should create a author', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/authors')
+          .set({ authorization: infiniteLibrarianJwtTokenMock })
+          .send({
+            name: 'example name',
+          });
+
+        const authorId = response.body.authorId;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(authorId).toBeDefined();
+        expect(EntityId.isValid(authorId as string)).toBeTruthy();
+      });
+    });
+
+    describe('Errors', () => {
+      it('Should throw error if tenant user was trying to create a new author', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/authors')
+          .set({ authorization: infiniteTenantJwtTokenMock })
+          .send({
+            title: 'example title',
+            description: 'example description',
+            releaseDate: '20250802',
+            authorIds: ['a0000000-0000-4000-a000-000000000001'],
+          });
+
+        const body = response.body;
+        expect(body.authorId).toBeUndefined();
+        expect(body.message).toBe('Librarian access is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
+      it('Should throw error if token is undefined', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/authors')
+          .send({
+            title: 'example title',
+            description: 'example description',
+            releaseDate: '20250802',
+            authors: ['Heisenberg'],
+          });
+
+        const body = response.body;
+        expect(body.authorId).toBeUndefined();
+        expect(body.message).toBe('Token is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
+      it('Should throw error if token is invalid', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/authors')
+          .set({ authorization: 'Bearer invalidToken' })
+          .send({
+            title: 'example title',
+            description: 'example description',
+            releaseDate: '20250802',
+            authors: ['Heisenberg'],
+          });
+
+        const body = response.body;
+        expect(body.authorId).toBeUndefined();
+        expect(body.message).toBe('Invalid token.');
+        expect(body.statusCode).toBe(401);
+      });
+    });
+  });
+});

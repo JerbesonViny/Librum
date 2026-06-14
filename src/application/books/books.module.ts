@@ -1,27 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import {
-  AUTHOR_REPOSITORY,
-  BOOK_REPOSITORY,
-} from '@/domain/contracts/repositories';
-import { BookRepository, AuthorRepository } from '@/infra/repositories';
+import { BOOK_REPOSITORY } from '@/domain/contracts/repositories';
+import { BookRepository } from '@/infra/repositories';
 import { AuthorOrmEntity, BookOrmEntity } from '@/infra/database/typeorm';
 import { CreateBookUseCase } from './usecases';
 import { BooksController } from './books.controller';
+import { AuthorsModule } from '@/application/authors/authors.module';
 
 const BookRepositoryFactory = {
   provide: BOOK_REPOSITORY,
   useClass: BookRepository,
 };
 
-const AuthorRepositoryFactory = {
-  provide: AUTHOR_REPOSITORY,
-  useClass: AuthorRepository,
-};
-
 @Module({
-  imports: [TypeOrmModule.forFeature([BookOrmEntity, AuthorOrmEntity])],
+  imports: [
+    TypeOrmModule.forFeature([BookOrmEntity, AuthorOrmEntity]),
+    AuthorsModule,
+  ],
   controllers: [BooksController],
   providers: [
     // Usecases
@@ -29,11 +25,9 @@ const AuthorRepositoryFactory = {
 
     // Repositories
     BookRepositoryFactory,
-    AuthorRepositoryFactory,
   ],
   exports: [
     BookRepositoryFactory,
-    AuthorRepositoryFactory,
     TypeOrmModule.forFeature([BookOrmEntity, AuthorOrmEntity]),
   ],
 })

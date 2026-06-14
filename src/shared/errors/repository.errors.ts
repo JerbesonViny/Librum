@@ -15,5 +15,6 @@ export class PersistenceUserRoleError extends Error {
 export class EntityNotFound extends Error {
   constructor(entityName: string) {
     super(`${entityName} not found.`);
+    this.name = 'EntityNotFound';
   }
 }

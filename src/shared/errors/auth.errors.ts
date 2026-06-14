@@ -11,3 +11,17 @@ export class UserNotFoundError extends Error {
     this.name = 'UserNotFoundError';
   }
 }
+
+export class EmailAlreadyUsedError extends Error {
+  constructor() {
+    super('This email is already used.');
+    this.name = 'EmailAlreadyUsedError';
+  }
+}
+
+export class CreateHashError extends Error {
+  constructor() {
+    super('Error to create hash.');
+    this.name = 'CreateHashError';
+  }
+}

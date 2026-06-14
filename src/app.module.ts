@@ -11,12 +11,14 @@ import { BooksModule } from '@/application/books/books.module';
 import { LoansModule } from '@/application/loans/loans.module';
 import { ReturnsModule } from '@/application/returns/returns.module';
 import { AuthorsModule } from '@/application/authors/authors.module';
+import { SignUpModule } from '@/application/sign-up/sign-up.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     WinstonModule.forRoot(winstonConfig),
     DatabaseModule,
+    SignUpModule,
     AuthenticationModule,
     AuthorsModule,
     BooksModule,

@@ -21,4 +21,8 @@ export class TenantEntity extends UserEntity {
       throw new EmptyFieldError('birthDate');
     }
   }
+
+  getBirthDate() {
+    return this.birthDate;
+  }
 }

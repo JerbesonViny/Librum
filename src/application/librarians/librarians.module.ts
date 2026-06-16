@@ -4,7 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantOrmEntity, UserOrmEntity } from '@/infra/database/typeorm';
 import { AuthenticationModule } from '@/application/authentication/authentication.module';
 import { LibrariansController } from './librarians.controller';
-import { ApproveLibrarianAccessUseCase } from './usecases';
+import {
+  ApproveLibrarianAccessUseCase,
+  DeactivateLibrarianAccessUseCase,
+} from './usecases';
 
 @Module({
   imports: [
@@ -12,6 +15,6 @@ import { ApproveLibrarianAccessUseCase } from './usecases';
     AuthenticationModule,
   ],
   controllers: [LibrariansController],
-  providers: [ApproveLibrarianAccessUseCase],
+  providers: [ApproveLibrarianAccessUseCase, DeactivateLibrarianAccessUseCase],
 })
 export class LibrariansModule {}

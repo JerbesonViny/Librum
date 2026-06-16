@@ -32,3 +32,7 @@ export interface FindOneUser extends FindOne<
 export interface ApproveLibrarianAccess {
   approveLibrarianAccess(entity: LibrarianEntity): Promise<boolean | null>;
 }
+
+export interface DeactivateLibrarianAccess {
+  deactivateLibrarianAccess(entity: LibrarianEntity): Promise<boolean | null>;
+}

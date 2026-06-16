@@ -5,6 +5,7 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import {
   ApproveLibrarianAccess,
   Create,
+  DeactivateLibrarianAccess,
   FindOneUser,
   FindOneUserInput,
   GetUserByEmail,
@@ -38,7 +39,8 @@ export class UserRepository
     GetUserByEmail<UserEntities>,
     FindOneUser,
     Create<UserEntity, EntityId>,
-    ApproveLibrarianAccess
+    ApproveLibrarianAccess,
+    DeactivateLibrarianAccess
 {
   constructor(
     @InjectRepository(UserOrmEntity)
@@ -176,6 +178,35 @@ export class UserRepository
         .set({
           approved: true,
           approvedAt: entity.getApprovedAt(),
+        })
+        .where('user_id = :userId', { userId: entity.getId().toString() })
+        .execute();
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+
+    return true;
+  }
+
+  async deactivateLibrarianAccess(
+    entity: LibrarianEntity,
+  ): Promise<boolean | null> {
+    const lib = this.librarianRepository.create({
+      userId: entity.getId().toString(),
+      approved: entity.isApproved(),
+      disabled: entity.isDisabled(),
+      approvedAt: entity.getApprovedAt(),
+      disabledAt: entity.getDisabledAt(),
+    });
+
+    try {
+      await this.librarianRepository
+        .createQueryBuilder()
+        .update(lib)
+        .set({
+          disabled: true,
+          disabledAt: entity.getDisabledAt(),
         })
         .where('user_id = :userId', { userId: entity.getId().toString() })
         .execute();

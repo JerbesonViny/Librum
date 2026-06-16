@@ -8,6 +8,7 @@ import {
   users,
   loans,
   returns,
+  admins,
 } from '../seeds';
 
 export class DatabaseConnector {
@@ -40,6 +41,7 @@ export class DatabaseSeeder {
       await this.seedUsers(client);
       await this.seedLibrarians(client);
       await this.seedTenants(client);
+      await this.seedAdmins(client);
       await this.seedBooks(client);
       await this.seedAuthors(client);
       await this.seedAuthorBook(client);
@@ -57,6 +59,7 @@ export class DatabaseSeeder {
       'loans',
       'librarians',
       'tenants',
+      'admins',
       'users',
       'author_book',
       'books',
@@ -80,10 +83,17 @@ export class DatabaseSeeder {
   private async seedUsers(client: PoolClient): Promise<void> {
     for (const user of users) {
       await client.query(
-        `INSERT INTO users (id, name, last_name, email, password)
-         VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO users (id, name, last_name, email, password, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6)
          ON CONFLICT (id) DO NOTHING`,
-        [user.id, user.name, user.last_name, user.email, user.password],
+        [
+          user.id,
+          user.name,
+          user.last_name,
+          user.email,
+          user.password,
+          user.createdAt,
+        ],
       );
     }
   }
@@ -91,10 +101,16 @@ export class DatabaseSeeder {
   private async seedLibrarians(client: PoolClient): Promise<void> {
     for (const user of librarians) {
       await client.query(
-        `INSERT INTO librarians (user_id)
-         VALUES ($1)
+        `INSERT INTO librarians (user_id, approved, disabled, approved_at, disabled_at)
+         VALUES ($1, $2, $3, $4, $5)
          ON CONFLICT (user_id) DO NOTHING`,
-        [user.user_id],
+        [
+          user.user_id,
+          user.approved,
+          user.disabled,
+          user?.approvedAt,
+          user?.disabledAt,
+        ],
       );
     }
   }
@@ -106,6 +122,17 @@ export class DatabaseSeeder {
          VALUES ($1, $2)
          ON CONFLICT (user_id) DO NOTHING`,
         [user.user_id, user.birth_date],
+      );
+    }
+  }
+
+  private async seedAdmins(client: PoolClient): Promise<void> {
+    for (const user of admins) {
+      await client.query(
+        `INSERT INTO admins (user_id)
+         VALUES ($1)
+         ON CONFLICT (user_id) DO NOTHING`,
+        [user.user_id],
       );
     }
   }

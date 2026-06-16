@@ -4,7 +4,7 @@ import {
 } from '@/shared/errors';
 import { EntityId } from './id.entity';
 
-export type UserRoles = 'LIBRARIAN' | 'TENANT';
+export type UserRoles = 'LIBRARIAN' | 'TENANT' | 'ADMIN';
 
 export type UserConstructor = {
   id?: EntityId;
@@ -12,6 +12,7 @@ export type UserConstructor = {
   lastName: string;
   email: string;
   password: string;
+  createdAt?: Date;
 };
 
 const MINIMUM_CHARACTERS_PASSWORD = 5;
@@ -23,13 +24,22 @@ export abstract class UserEntity {
   protected email: string;
   protected password: string;
   protected readonly role: UserRoles;
+  protected readonly createdAt: Date;
 
-  constructor({ id, name, lastName, email, password }: UserConstructor) {
+  constructor({
+    id,
+    name,
+    lastName,
+    email,
+    password,
+    createdAt,
+  }: UserConstructor) {
     this.id = id ?? new EntityId();
     this.name = name;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
+    this.createdAt = createdAt ?? new Date();
   }
 
   protected validate() {

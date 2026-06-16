@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {
+  AdminOrmEntity,
   LibrarianOrmEntity,
   TenantOrmEntity,
   UserOrmEntity,
@@ -22,6 +23,7 @@ const UserRepositoryFactory = {
       UserOrmEntity,
       LibrarianOrmEntity,
       TenantOrmEntity,
+      AdminOrmEntity,
     ]),
   ],
   controllers: [SignUpController],

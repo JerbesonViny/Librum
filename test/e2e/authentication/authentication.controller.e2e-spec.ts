@@ -89,4 +89,62 @@ describe('Authentication Controller', () => {
       });
     });
   });
+
+  describe('Admins', () => {
+    describe('Success', () => {
+      it('Should authenticate admin user', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/admin')
+          .send({
+            email: 'mockedAdminEmail',
+            password: 'mockedPassword',
+          });
+
+        const body = response.body;
+        expect(body.message).toBeUndefined();
+        expect(body.token).toBeDefined();
+      });
+    });
+
+    describe('Errors', () => {
+      it('Should throw error if librarian user trying sign in wrong path', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/admin')
+          .send({
+            email: 'mockedLibrarianEmail',
+            password: 'mockedPassword',
+          });
+
+        const body = response.body;
+        expect(body.message).toBe('User not found.');
+        expect(body.token).toBeUndefined();
+      });
+
+      it('Should throw error if tenant user trying sign in wrong path', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/admin')
+          .send({
+            email: 'mockedTenantEmail',
+            password: 'mockedPassword',
+          });
+
+        const body = response.body;
+        expect(body.message).toBe('User not found.');
+        expect(body.token).toBeUndefined();
+      });
+
+      it('Should throw error if admin user trying sign in wrong path', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/auth/tenant')
+          .send({
+            email: 'mockedAdminEmail',
+            password: 'mockedPassword',
+          });
+
+        const body = response.body;
+        expect(body.message).toBe('User not found.');
+        expect(body.token).toBeUndefined();
+      });
+    });
+  });
 });

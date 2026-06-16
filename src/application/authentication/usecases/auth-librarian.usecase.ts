@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
+  LibrarianAccessError,
   UserNotFoundError,
   WrongPasswordError,
   createHash,
@@ -39,6 +40,10 @@ export class AuthLibrarianUseCase {
 
     if (!user) {
       throw new UserNotFoundError();
+    }
+
+    if (user.getRole() !== this.role) {
+      throw new LibrarianAccessError();
     }
 
     const hashedPassword = createHash(password);

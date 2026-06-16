@@ -9,6 +9,7 @@ import {
   AuthorOrmEntity,
   LoanOrmEntity,
   ReturnsLoanOrmEntity,
+  AdminOrmEntity,
 } from './typeorm';
 
 @Module({
@@ -23,6 +24,7 @@ import {
         BookOrmEntity,
         TenantOrmEntity,
         LibrarianOrmEntity,
+        AdminOrmEntity,
         AuthorOrmEntity,
         LoanOrmEntity,
         ReturnsLoanOrmEntity,

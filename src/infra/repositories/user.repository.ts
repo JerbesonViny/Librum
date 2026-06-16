@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import {
+  ApproveLibrarianAccess,
   Create,
   FindOneUser,
   FindOneUserInput,
@@ -10,6 +11,7 @@ import {
   GetUserByEmailInput,
 } from '@/domain/contracts/repositories';
 import {
+  AdminEntity,
   EntityId,
   LibrarianEntity,
   TenantEntity,
@@ -17,12 +19,13 @@ import {
   UserRoles,
 } from '@/domain/entities';
 import {
+  AdminOrmEntity,
   LibrarianOrmEntity,
   TenantOrmEntity,
   UserOrmEntity,
 } from '@/infra/database/typeorm';
 
-type UserEntities = TenantEntity | LibrarianEntity;
+type UserEntities = TenantEntity | LibrarianEntity | AdminEntity;
 
 type GetJoin = {
   baseQuery: SelectQueryBuilder<UserOrmEntity>;
@@ -34,7 +37,8 @@ export class UserRepository
   implements
     GetUserByEmail<UserEntities>,
     FindOneUser,
-    Create<UserEntity, EntityId>
+    Create<UserEntity, EntityId>,
+    ApproveLibrarianAccess
 {
   constructor(
     @InjectRepository(UserOrmEntity)
@@ -43,6 +47,8 @@ export class UserRepository
     private readonly tenantRepository: Repository<TenantOrmEntity>,
     @InjectRepository(LibrarianOrmEntity)
     private readonly librarianRepository: Repository<LibrarianOrmEntity>,
+    @InjectRepository(AdminOrmEntity)
+    private readonly adminRepository: Repository<AdminOrmEntity>,
   ) {}
 
   async create(entity: UserEntity): Promise<EntityId | null> {
@@ -69,6 +75,10 @@ export class UserRepository
     if (this.librarianGuard(entity)) {
       return this.librarianRepository.create({
         userId: entity.getId().toString(),
+        approved: entity.isApproved(),
+        disabled: entity.isDisabled(),
+        approvedAt: entity.getApprovedAt(),
+        disabledAt: entity.getDisabledAt(),
       });
     } else if (this.tenantGuard(entity)) {
       return this.tenantRepository.create({
@@ -76,6 +86,10 @@ export class UserRepository
         birthDate: entity.getBirthDate(),
       });
     }
+
+    return this.adminRepository.create({
+      userId: entity.getId().toString(),
+    });
   }
 
   private tenantGuard(entity: UserEntity): entity is TenantEntity {
@@ -114,12 +128,15 @@ export class UserRepository
         return baseQuery.innerJoinAndSelect('user.tenant', 'tenant');
       } else if (role == 'LIBRARIAN') {
         return baseQuery.innerJoinAndSelect('user.librarian', 'librarian');
+      } else {
+        return baseQuery.innerJoinAndSelect('user.admin', 'admin');
       }
     }
 
     return baseQuery
       .leftJoinAndSelect('user.tenant', 'tenant')
-      .leftJoinAndSelect('user.librarian', 'librarian');
+      .leftJoinAndSelect('user.librarian', 'librarian')
+      .leftJoinAndSelect('user.admin', 'admin');
   }
 
   async findOne(input: FindOneUserInput): Promise<UserEntities | null> {
@@ -139,5 +156,34 @@ export class UserRepository
     }
 
     return user.toDomain();
+  }
+
+  async approveLibrarianAccess(
+    entity: LibrarianEntity,
+  ): Promise<boolean | null> {
+    const lib = this.librarianRepository.create({
+      userId: entity.getId().toString(),
+      approved: entity.isApproved(),
+      disabled: entity.isDisabled(),
+      approvedAt: entity.getApprovedAt(),
+      disabledAt: entity.getDisabledAt(),
+    });
+
+    try {
+      await this.librarianRepository
+        .createQueryBuilder()
+        .update(lib)
+        .set({
+          approved: true,
+          approvedAt: entity.getApprovedAt(),
+        })
+        .where('user_id = :userId', { userId: entity.getId().toString() })
+        .execute();
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+
+    return true;
   }
 }

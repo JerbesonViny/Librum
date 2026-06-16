@@ -6,3 +6,4 @@ export * from './tenant.entity';
 export * from './author.entity';
 export * from './loan.entity';
 export * from './returns.entity';
+export * from './admin.entity';

@@ -5,3 +5,4 @@ export * from './librarian.orm.entity';
 export * from './author.orm.entity';
 export * from './loan.orm.entity';
 export * from './returns.orm.entity';
+export * from './admin.orm.entity';

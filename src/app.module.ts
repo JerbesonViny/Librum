@@ -12,6 +12,7 @@ import { LoansModule } from '@/application/loans/loans.module';
 import { ReturnsModule } from '@/application/returns/returns.module';
 import { AuthorsModule } from '@/application/authors/authors.module';
 import { SignUpModule } from '@/application/sign-up/sign-up.module';
+import { LibrariansModule } from '@/application/librarians/librarians.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SignUpModule } from '@/application/sign-up/sign-up.module';
     BooksModule,
     LoansModule,
     ReturnsModule,
+    LibrariansModule,
   ],
   controllers: [],
   providers: [],

@@ -25,3 +25,24 @@ export class CreateHashError extends Error {
     this.name = 'CreateHashError';
   }
 }
+
+export class AdminAccessError extends Error {
+  constructor() {
+    super('Admin access is required.');
+    this.name = 'AdminAccessError';
+  }
+}
+
+export class TenantAccessError extends Error {
+  constructor() {
+    super('Tenant access is required.');
+    this.name = 'TenantAccessError';
+  }
+}
+
+export class LibrarianAccessError extends Error {
+  constructor() {
+    super('Librarian access is required.');
+    this.name = 'LibrarianAccessError';
+  }
+}

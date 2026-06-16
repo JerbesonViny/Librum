@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  TenantAccessError,
+  AdminAccessError,
   UserNotFoundError,
   WrongPasswordError,
   createHash,
@@ -11,7 +11,7 @@ import {
   GetUserByEmail,
   USER_REPOSITORY,
 } from '@/domain/contracts/repositories/user.repository';
-import { TenantEntity, UserRoles } from '@/domain/entities';
+import { AdminEntity, UserRoles } from '@/domain/entities';
 
 type Input = {
   email: string;
@@ -23,12 +23,12 @@ type Output = {
 } | null;
 
 @Injectable()
-export class AuthTenantUseCase {
-  private readonly role: UserRoles = 'TENANT';
+export class AuthAdminUseCase {
+  private readonly role: UserRoles = 'ADMIN';
 
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: GetUserByEmail<TenantEntity>,
+    private readonly userRepository: GetUserByEmail<AdminEntity>,
     private readonly configService: ConfigService,
   ) {}
   async perform({ email, password }: Input): Promise<Output> {
@@ -43,7 +43,7 @@ export class AuthTenantUseCase {
     }
 
     if (user.getRole() !== this.role) {
-      throw new TenantAccessError();
+      throw new AdminAccessError();
     }
 
     const hashedPassword = createHash(password);
@@ -61,10 +61,10 @@ export class AuthTenantUseCase {
     return null;
   }
 
-  private buildToken(user: TenantEntity) {
+  private buildToken(user: AdminEntity) {
     return createToken({
       payload: {
-        userId: user.getId(),
+        userId: user.getId().toString(),
         role: this.role,
       },
       privateKey: this.configService.get<string>('jwt.secretKey') as string,

@@ -1,4 +1,5 @@
 import {
+  AdminEntity,
   EntityId,
   LibrarianEntity,
   TenantEntity,
@@ -25,5 +26,9 @@ export type FindOneUserInput = {
 
 export interface FindOneUser extends FindOne<
   FindOneUserInput,
-  TenantEntity | LibrarianEntity
+  TenantEntity | LibrarianEntity | AdminEntity
 > {}
+
+export interface ApproveLibrarianAccess {
+  approveLibrarianAccess(entity: LibrarianEntity): Promise<boolean | null>;
+}

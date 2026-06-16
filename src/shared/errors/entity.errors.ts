@@ -48,3 +48,10 @@ export class BookAlreadyReturnedError extends Error {
     this.name = 'BookAlreadyReturnedError';
   }
 }
+
+export class CannotApproveDisabledLibrarian extends Error {
+  constructor() {
+    super('Disabled librarian account cannot be approved.');
+    this.name = 'CannotApproveDisabledLibrarian';
+  }
+}

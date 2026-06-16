@@ -5,11 +5,16 @@ import {
   LibrarianOrmEntity,
   TenantOrmEntity,
   UserOrmEntity,
+  AdminOrmEntity,
 } from '@/infra/database/typeorm';
 import { USER_REPOSITORY } from '@/domain/contracts/repositories';
 import { UserRepository } from '@/infra/repositories/user.repository';
 import { AuthenticationController } from './authentication.controller';
-import { AuthLibrarianUseCase, AuthTenantUseCase } from './usecases';
+import {
+  AuthAdminUseCase,
+  AuthLibrarianUseCase,
+  AuthTenantUseCase,
+} from './usecases';
 
 const UserRepositoryFactory = {
   provide: USER_REPOSITORY,
@@ -22,6 +27,7 @@ const UserRepositoryFactory = {
       UserOrmEntity,
       LibrarianOrmEntity,
       TenantOrmEntity,
+      AdminOrmEntity,
     ]),
   ],
   controllers: [AuthenticationController],
@@ -29,6 +35,7 @@ const UserRepositoryFactory = {
     // Use cases
     AuthLibrarianUseCase,
     AuthTenantUseCase,
+    AuthAdminUseCase,
 
     // Repositories
     UserRepositoryFactory,

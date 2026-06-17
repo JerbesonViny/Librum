@@ -5,7 +5,7 @@ import {
   FindOneReturnsInput,
 } from '@/domain/contracts/repositories';
 import { Repository } from 'typeorm';
-import { ReturnsLoanOrmEntity } from '../database/typeorm';
+import { ReturnsLoanOrmEntity } from '@/infra/database/typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityId, ReturnsEntity } from '@/domain/entities';
 import { EmptyFieldError } from '@/shared';

@@ -2,7 +2,7 @@ import {
   CannotApproveDisabledLibrarian,
   CannotLessOrEqualsThanError,
   EmptyFieldError,
-} from '../../shared';
+} from '@/shared';
 import { UserConstructor, UserEntity, UserRoles } from './user.entity';
 
 export type LibrarianConstructor = UserConstructor & {

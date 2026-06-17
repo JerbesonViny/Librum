@@ -6,13 +6,16 @@ import {
   Create,
   FindOneBook,
   FindOneBookInput,
+  PaginatedBooks,
+  PaginatedOutput,
+  Pagination,
 } from '@/domain/contracts/repositories';
 import { BookEntity, EntityId } from '@/domain/entities';
 import { BookOrmEntity } from '@/infra/database/typeorm';
 
 @Injectable()
 export class BookRepository
-  implements Create<BookEntity, EntityId>, FindOneBook
+  implements Create<BookEntity, EntityId>, FindOneBook, PaginatedBooks
 {
   constructor(
     @InjectRepository(BookOrmEntity)
@@ -48,5 +51,32 @@ export class BookRepository
     }
 
     return book.toDomain();
+  }
+
+  async paginate({
+    page,
+    pageSize,
+  }: Pagination): Promise<PaginatedOutput<BookEntity> | null> {
+    const __page = !page || Number(page) <= 0 ? 1 : Number(page);
+    const __pageSize = pageSize || 10;
+    const __skip = __pageSize * (__page - 1);
+
+    try {
+      const [books, records] = await this.repository.findAndCount({
+        relations: { authors: true },
+        skip: __skip,
+        take: __pageSize,
+      });
+
+      return {
+        page: __page,
+        records,
+        items: books.map((book) => book.toDomain()),
+      };
+    } catch (error) {
+      console.log(error);
+    }
+
+    return null;
   }
 }

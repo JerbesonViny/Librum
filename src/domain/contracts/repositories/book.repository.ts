@@ -1,5 +1,5 @@
 import { BookEntity, EntityId } from '@/domain/entities';
-import { FindOne } from './generic.repository';
+import { FindOne, Paginated, Pagination } from './generic.repository';
 
 export const BOOK_REPOSITORY = Symbol('BOOK_REPOSITORY');
 
@@ -8,3 +8,10 @@ export type FindOneBookInput = {
 };
 
 export interface FindOneBook extends FindOne<FindOneBookInput, BookEntity> {}
+
+export type PaginatedBooksInput = Pagination;
+
+export interface PaginatedBooks extends Paginated<
+  PaginatedBooksInput,
+  BookEntity
+> {}

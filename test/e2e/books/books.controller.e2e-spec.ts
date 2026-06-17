@@ -22,7 +22,6 @@ describe('Books Controller', () => {
   beforeAll(async () => {
     connection = DatabaseConnector.getInstance();
     databaseSeeder = new DatabaseSeeder(connection);
-    await databaseSeeder.reset();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -31,6 +30,10 @@ describe('Books Controller', () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalFilters(new HttpExceptionFilter());
     await app.init();
+  });
+
+  beforeEach(async () => {
+    await databaseSeeder.reset();
   });
 
   afterAll(async () => {
@@ -125,6 +128,59 @@ describe('Books Controller', () => {
         expect(body.bookId).toBeUndefined();
         expect(body.message).toBe('Invalid token.');
         expect(body.statusCode).toBe(401);
+      });
+    });
+  });
+
+  describe('List', () => {
+    describe('Success', () => {
+      it('Should list books', async () => {
+        const response = await request(app.getHttpServer()).get('/books');
+
+        const messageError = response.body?.message;
+        const body = response.body;
+        const page = body?.page;
+        const records = body?.records;
+        const books = body?.items;
+        expect(messageError).toBeUndefined();
+        expect(page).toBe(1);
+        expect(records).toBe(9);
+        expect(books.length).toBe(9);
+        expect(books).toMatchSnapshot();
+      });
+
+      it('Should list books using pageSize', async () => {
+        const response = await request(app.getHttpServer()).get(
+          '/books?page=1&pageSize=2',
+        );
+
+        const messageError = response.body?.message;
+        const body = response.body;
+        const page = body?.page;
+        const records = body?.records;
+        const books = body?.items;
+        expect(messageError).toBeUndefined();
+        expect(page).toBe(1);
+        expect(records).toBe(9);
+        expect(books.length).toBe(2);
+        expect(books).toMatchSnapshot();
+      });
+
+      it('Should list books using pageSize and page', async () => {
+        const response = await request(app.getHttpServer()).get(
+          '/books?page=2&pageSize=2',
+        );
+
+        const messageError = response.body?.message;
+        const body = response.body;
+        const page = body?.page;
+        const records = body?.records;
+        const books = body?.items;
+        expect(messageError).toBeUndefined();
+        expect(page).toBe(2);
+        expect(records).toBe(9);
+        expect(books.length).toBe(2);
+        expect(books).toMatchSnapshot();
       });
     });
   });

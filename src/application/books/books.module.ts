@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BOOK_REPOSITORY } from '@/domain/contracts/repositories';
 import { BookRepository } from '@/infra/repositories';
 import { AuthorOrmEntity, BookOrmEntity } from '@/infra/database/typeorm';
-import { CreateBookUseCase } from './usecases';
+import { CreateBookUseCase, ListBooksUseCase } from './usecases';
 import { BooksController } from './books.controller';
 import { AuthorsModule } from '@/application/authors/authors.module';
 
@@ -22,6 +22,7 @@ const BookRepositoryFactory = {
   providers: [
     // Usecases
     CreateBookUseCase,
+    ListBooksUseCase,
 
     // Repositories
     BookRepositoryFactory,

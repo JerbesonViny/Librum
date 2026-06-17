@@ -1,0 +1,172 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Books Controller List Success Should list books 1`] = `
+[
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "mockedDescription",
+    "id": "a0000000-0000-4000-a000-000000000001",
+    "releaseDate": "20240502",
+    "title": "mockedTitle",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000002",
+    "releaseDate": "19970502",
+    "title": "Harry Potter e a Pedra filosofal",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000003",
+    "releaseDate": "19980502",
+    "title": "Harry Potter e a Camara Secreta",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000004",
+    "releaseDate": "19990502",
+    "title": "Harry Potter e o Prisioneiro de Azkaban",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000005",
+    "releaseDate": "20000502",
+    "title": "Harry Potter e o Calice de Fogo",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000006",
+    "releaseDate": "20030502",
+    "title": "Harry Potter e a Ordem da Fenix",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000007",
+    "releaseDate": "20050502",
+    "title": "Harry Potter e a Enigma do Principe",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000008",
+    "releaseDate": "20070502",
+    "title": "Harry Potter e as Reliquias da Morte",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000009",
+    "releaseDate": "20160502",
+    "title": "Harry Potter e a Crianca Amaldiocoada",
+  },
+]
+`;
+
+exports[`Books Controller List Success Should list books using pageSize 1`] = `
+[
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "mockedDescription",
+    "id": "a0000000-0000-4000-a000-000000000001",
+    "releaseDate": "20240502",
+    "title": "mockedTitle",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000002",
+    "releaseDate": "19970502",
+    "title": "Harry Potter e a Pedra filosofal",
+  },
+]
+`;
+
+exports[`Books Controller List Success Should list books using pageSize and page 1`] = `
+[
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000003",
+    "releaseDate": "19980502",
+    "title": "Harry Potter e a Camara Secreta",
+  },
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000004",
+    "releaseDate": "19990502",
+    "title": "Harry Potter e o Prisioneiro de Azkaban",
+  },
+]
+`;

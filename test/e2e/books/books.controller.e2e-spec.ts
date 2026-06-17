@@ -135,7 +135,11 @@ describe('Books Controller', () => {
   describe('List', () => {
     describe('Success', () => {
       it('Should list books', async () => {
-        const response = await request(app.getHttpServer()).get('/books');
+        const response = await request(app.getHttpServer())
+          .get('/books')
+          .set({
+            authorization: `Bearer ${infiniteTenantJwtTokenMock}`,
+          });
 
         const messageError = response.body?.message;
         const body = response.body;
@@ -150,9 +154,11 @@ describe('Books Controller', () => {
       });
 
       it('Should list books using pageSize', async () => {
-        const response = await request(app.getHttpServer()).get(
-          '/books?page=1&pageSize=2',
-        );
+        const response = await request(app.getHttpServer())
+          .get('/books?page=1&pageSize=2')
+          .set({
+            authorization: `Bearer ${infiniteLibrarianJwtTokenMock}`,
+          });
 
         const messageError = response.body?.message;
         const body = response.body;
@@ -167,9 +173,11 @@ describe('Books Controller', () => {
       });
 
       it('Should list books using pageSize and page', async () => {
-        const response = await request(app.getHttpServer()).get(
-          '/books?page=2&pageSize=2',
-        );
+        const response = await request(app.getHttpServer())
+          .get('/books?page=2&pageSize=2')
+          .set({
+            authorization: `Bearer ${infiniteTenantJwtTokenMock}`,
+          });
 
         const messageError = response.body?.message;
         const body = response.body;
@@ -181,6 +189,24 @@ describe('Books Controller', () => {
         expect(records).toBe(9);
         expect(books.length).toBe(2);
         expect(books).toMatchSnapshot();
+      });
+    });
+
+    describe('Errors', () => {
+      it('Should throw error if token is undefined', async () => {
+        const response = await request(app.getHttpServer()).get('/books');
+
+        const messageError = response.body?.message;
+        expect(messageError).toBe('Token is required.');
+      });
+
+      it('Should throw error if token is invalid is null', async () => {
+        const response = await request(app.getHttpServer()).get('/books').set({
+          authorization: 'Bearer invalidToken',
+        });
+
+        const messageError = response.body?.message;
+        expect(messageError).toBe('Invalid token.');
       });
     });
   });

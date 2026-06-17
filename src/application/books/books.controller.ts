@@ -18,6 +18,7 @@ export class BooksController {
   }
 
   @Get()
+  @UseGuards(JwtGuard)
   list(@Query() input: ListBooksInput) {
     return this.listBooksUseCase.perform(input);
   }

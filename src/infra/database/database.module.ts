@@ -32,5 +32,17 @@ import {
       synchronize: process.env.NODE_ENV !== 'production',
     }),
   ],
+  exports: [
+    TypeOrmModule.forFeature([
+      UserOrmEntity,
+      BookOrmEntity,
+      TenantOrmEntity,
+      LibrarianOrmEntity,
+      AdminOrmEntity,
+      AuthorOrmEntity,
+      LoanOrmEntity,
+      ReturnsLoanOrmEntity,
+    ]),
+  ],
 })
 export class DatabaseModule {}

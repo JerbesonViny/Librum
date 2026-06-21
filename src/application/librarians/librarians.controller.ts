@@ -1,10 +1,19 @@
-import { Body, Controller, Injectable, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Injectable,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtGuard, AdminGuard } from '@/infra/guards';
 import {
   ApproveLibrarianAccessUseCase,
   DeactivateLibrarianAccessUseCase,
+  PendingApprovesUseCase,
 } from './usecases';
-import { ApproveLibrarianAccess } from './dto';
+import { ApproveLibrarianAccess, ListLibrariansPendingApprove } from './dto';
 
 @Injectable()
 @Controller('librarian')
@@ -12,6 +21,7 @@ export class LibrariansController {
   constructor(
     private readonly approveLibrarianAccessUseCase: ApproveLibrarianAccessUseCase,
     private readonly deactivateLibrarianAccessUseCase: DeactivateLibrarianAccessUseCase,
+    private readonly pendingApprovesUseCase: PendingApprovesUseCase,
   ) {}
 
   @Post('approve')
@@ -24,5 +34,11 @@ export class LibrariansController {
   @UseGuards(JwtGuard, AdminGuard)
   async deactivate(@Body() input: ApproveLibrarianAccess) {
     return this.deactivateLibrarianAccessUseCase.perform(input);
+  }
+
+  @Get('pending')
+  @UseGuards(JwtGuard, AdminGuard)
+  async pendingApprove(@Query() input: ListLibrariansPendingApprove) {
+    return this.pendingApprovesUseCase.perform(input);
   }
 }

@@ -10,6 +10,10 @@ import {
   FindOneUserInput,
   GetUserByEmail,
   GetUserByEmailInput,
+  LibrarianFiltersInput,
+  PaginatedOutput,
+  PaginatedUsers,
+  PaginatedUsersInput,
 } from '@/domain/contracts/repositories';
 import {
   AdminEntity,
@@ -25,12 +29,23 @@ import {
   TenantOrmEntity,
   UserOrmEntity,
 } from '@/infra/database/typeorm';
+import { buildPaginationParams } from '@/shared/utils/database.utils';
 
 type UserEntities = TenantEntity | LibrarianEntity | AdminEntity;
 
 type GetJoin = {
   baseQuery: SelectQueryBuilder<UserOrmEntity>;
   role?: UserRoles;
+};
+
+type GetUserWhereByRole = {
+  role?: UserRoles;
+  librarian?: LibrarianFiltersInput;
+};
+
+type GetLibrarianCondition = {
+  baseQuery: SelectQueryBuilder<UserOrmEntity>;
+  librarian?: LibrarianFiltersInput;
 };
 
 @Injectable()
@@ -40,7 +55,8 @@ export class UserRepository
     FindOneUser,
     Create<UserEntity, EntityId>,
     ApproveLibrarianAccess,
-    DeactivateLibrarianAccess
+    DeactivateLibrarianAccess,
+    PaginatedUsers
 {
   constructor(
     @InjectRepository(UserOrmEntity)
@@ -216,5 +232,90 @@ export class UserRepository
     }
 
     return true;
+  }
+
+  async paginate(
+    input: PaginatedUsersInput,
+  ): Promise<PaginatedOutput<UserEntity> | null> {
+    const { page, skip, pageSize } = buildPaginationParams(input);
+    const roleCondition = this.getUserWhereByRole(input);
+
+    try {
+      let baseQuery = this.userRepository.createQueryBuilder('user');
+      baseQuery = this.getJoin({ baseQuery });
+
+      if (roleCondition) {
+        baseQuery.andWhere(roleCondition);
+      }
+
+      if (input.librarian && Object.keys(input.librarian).length) {
+        baseQuery = this.getLibrarianCondition({
+          baseQuery,
+          librarian: input.librarian,
+        });
+      }
+
+      console.log(baseQuery.getSql());
+
+      const [users, records] = await baseQuery
+        .skip(skip)
+        .limit(pageSize)
+        .getManyAndCount();
+
+      return {
+        page: page,
+        records,
+        items: users.map((user) => user.toDomain()),
+      };
+    } catch (error) {
+      console.log(error);
+    }
+
+    return null;
+  }
+
+  private getLibrarianCondition({
+    baseQuery,
+    librarian,
+  }: GetLibrarianCondition) {
+    const baseQueryCopy = baseQuery;
+
+    const addToQuery = [];
+
+    if (librarian?.statuses?.includes('PENDING_APPROVE')) {
+      addToQuery.push(
+        '(librarian.approved = false AND librarian.disabled = false)',
+      );
+    }
+
+    if (librarian?.statuses?.includes('APPROVED')) {
+      addToQuery.push(
+        '(librarian.approved = true AND librarian.disabled = false)',
+      );
+    }
+
+    if (librarian?.statuses?.includes('DISABLED')) {
+      addToQuery.push('(librarian.disabled = true)');
+    }
+
+    if (addToQuery.length) {
+      baseQueryCopy.andWhere(addToQuery.join('OR'));
+    }
+
+    return baseQueryCopy;
+  }
+
+  private getUserWhereByRole({ role }: GetUserWhereByRole) {
+    if (!role) {
+      return undefined;
+    } else if (role === 'ADMIN') {
+      return '"admin"."user_id" IS NOT NULL';
+    } else if (role === 'TENANT') {
+      return '"tenant"."user_id" IS NOT NULL';
+    } else if (role === 'LIBRARIAN') {
+      return '"librarian"."user_id" IS NOT NULL';
+    }
+
+    return undefined;
   }
 }

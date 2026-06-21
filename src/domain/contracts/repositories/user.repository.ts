@@ -2,11 +2,12 @@ import {
   AdminEntity,
   EntityId,
   LibrarianEntity,
+  LibrarianStatus,
   TenantEntity,
   UserEntity,
   UserRoles,
 } from '@/domain/entities';
-import { FindOne } from './generic.repository';
+import { FindOne, Paginated, Pagination } from './generic.repository';
 
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
 
@@ -36,3 +37,16 @@ export interface ApproveLibrarianAccess {
 export interface DeactivateLibrarianAccess {
   deactivateLibrarianAccess(entity: LibrarianEntity): Promise<boolean | null>;
 }
+
+export type LibrarianFiltersInput = {
+  statuses?: LibrarianStatus[];
+};
+export type PaginatedUsersInput = Pagination & {
+  role?: UserRoles;
+  librarian?: LibrarianFiltersInput;
+};
+
+export interface PaginatedUsers extends Paginated<
+  PaginatedUsersInput,
+  UserEntity
+> {}

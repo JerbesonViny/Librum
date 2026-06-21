@@ -7,6 +7,7 @@ import { LibrariansController } from './librarians.controller';
 import {
   ApproveLibrarianAccessUseCase,
   DeactivateLibrarianAccessUseCase,
+  PendingApprovesUseCase,
 } from './usecases';
 
 @Module({
@@ -15,6 +16,10 @@ import {
     AuthenticationModule,
   ],
   controllers: [LibrariansController],
-  providers: [ApproveLibrarianAccessUseCase, DeactivateLibrarianAccessUseCase],
+  providers: [
+    ApproveLibrarianAccessUseCase,
+    DeactivateLibrarianAccessUseCase,
+    PendingApprovesUseCase,
+  ],
 })
 export class LibrariansModule {}

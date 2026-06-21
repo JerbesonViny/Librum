@@ -12,7 +12,7 @@ export type LibrarianConstructor = UserConstructor & {
   approvedAt?: Date;
 };
 
-type LibrarianStatus = 'DISABLED' | 'APPROVED' | 'PENDING_APPROVE';
+export type LibrarianStatus = 'DISABLED' | 'APPROVED' | 'PENDING_APPROVE';
 
 export class LibrarianEntity extends UserEntity {
   protected readonly role: UserRoles = 'LIBRARIAN';

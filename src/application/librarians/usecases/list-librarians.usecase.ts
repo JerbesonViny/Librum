@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UseCase } from '@/domain/contracts/usecases';
-import { UserEntity } from '@/domain/entities';
+import { LibrarianStatus, UserEntity } from '@/domain/entities';
 import {
   USER_REPOSITORY,
   PaginatedUsers,
@@ -9,6 +9,7 @@ import {
 type Input = {
   page: number;
   pageSize: number;
+  statuses?: LibrarianStatus[];
 };
 
 type Output = {
@@ -18,18 +19,18 @@ type Output = {
 };
 
 @Injectable()
-export class DisabledLibrariansUseCase implements UseCase<Input, Output> {
+export class ListLibrariansUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: PaginatedUsers,
   ) {}
 
-  async perform(input: Input): Promise<Output | null> {
+  async perform({ statuses, ...input }: Input): Promise<Output | null> {
     return this.userRepository.paginate({
       ...input,
       role: 'LIBRARIAN',
       librarian: {
-        statuses: ['DISABLED'],
+        statuses,
       },
     });
   }

@@ -118,11 +118,11 @@ describe('Librarians Controller', () => {
     });
   });
 
-  describe('Pending approves', () => {
+  describe('List', () => {
     describe('Success', () => {
       it('Should list paginated pending approves', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian/pending')
+          .get('/librarian?statuses=PENDING_APPROVE')
           .set({
             authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
           });
@@ -132,71 +132,36 @@ describe('Librarians Controller', () => {
         expect(messageError).toBeUndefined();
         expect(body).toMatchSnapshot();
       });
-    });
 
-    describe('Errors', () => {
-      it('Should throw error if tenant user was trying to approve librarian access', async () => {
-        const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
-          .set({ authorization: infiniteTenantJwtTokenMock })
-          .send({
-            librarianId: 'a0000000-0000-4000-a000-000000000004',
-          });
-
-        const body = response.body;
-        expect(body.authorId).toBeUndefined();
-        expect(body.message).toBe('Admin access is required.');
-        expect(body.statusCode).toBe(401);
-      });
-
-      it('Should throw error if librarian user was trying to approve librarian access', async () => {
-        const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
-          .set({ authorization: infiniteLibrarianJwtTokenMock })
-          .send({
-            librarianId: 'a0000000-0000-4000-a000-000000000004',
-          });
-
-        const body = response.body;
-        expect(body.authorId).toBeUndefined();
-        expect(body.message).toBe('Admin access is required.');
-        expect(body.statusCode).toBe(401);
-      });
-
-      it('Should throw error if token is undefined', async () => {
-        const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
-          .send({
-            librarianId: 'a0000000-0000-4000-a000-000000000004',
-          });
-
-        const body = response.body;
-        expect(body.authorId).toBeUndefined();
-        expect(body.message).toBe('Token is required.');
-        expect(body.statusCode).toBe(401);
-      });
-
-      it('Should throw error if token is invalid', async () => {
-        const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
-          .set({ authorization: 'Bearer invalidToken' })
-          .send({
-            librarianId: 'a0000000-0000-4000-a000-000000000004',
-          });
-
-        const body = response.body;
-        expect(body.authorId).toBeUndefined();
-        expect(body.message).toBe('Invalid token.');
-        expect(body.statusCode).toBe(401);
-      });
-    });
-  });
-
-  describe('List approved librarians', () => {
-    describe('Success', () => {
       it('Should list paginated approved librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian/approved')
+          .get('/librarian?statuses=APPROVED')
+          .set({
+            authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
+          });
+
+        const body = response.body;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(body).toMatchSnapshot();
+      });
+
+      it('Should list paginated disabled librarians', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/librarian?statuses=DISABLED')
+          .set({
+            authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
+          });
+
+        const body = response.body;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(body).toMatchSnapshot();
+      });
+
+      it('Should list paginated disabled or approved librarians', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/librarian?statuses=DISABLED,APPROVED')
           .set({
             authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
           });
@@ -209,9 +174,9 @@ describe('Librarians Controller', () => {
     });
 
     describe('Errors', () => {
-      it('Should throw error if tenant user was trying to list approved librarians', async () => {
+      it('Should throw error if tenant user was trying to list librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian/approved')
+          .get('/librarian?statuses=PENDING_APPROVE')
           .set({ authorization: infiniteTenantJwtTokenMock });
 
         const body = response.body;
@@ -220,9 +185,9 @@ describe('Librarians Controller', () => {
         expect(body.statusCode).toBe(401);
       });
 
-      it('Should throw error if librarian user was trying to list approved librarians', async () => {
+      it('Should throw error if librarian user was trying to list librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian/approved')
+          .get('/librarian?statuses=PENDING_APPROVE')
           .set({ authorization: infiniteLibrarianJwtTokenMock });
 
         const body = response.body;
@@ -233,7 +198,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if token is undefined', async () => {
         const response = await request(app.getHttpServer()).get(
-          '/librarian/approved',
+          '/librarian?statuses=PENDING_APPROVE',
         );
 
         const body = response.body;
@@ -244,7 +209,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if token is invalid', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian/approved')
+          .get('/librarian?statuses=PENDING_APPROVE')
           .set({ authorization: 'Bearer invalidToken' });
 
         const body = response.body;

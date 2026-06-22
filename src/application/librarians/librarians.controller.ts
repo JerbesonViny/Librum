@@ -11,9 +11,7 @@ import { JwtGuard, AdminGuard } from '@/infra/guards';
 import {
   ApproveLibrarianAccessUseCase,
   DeactivateLibrarianAccessUseCase,
-  PendingApprovesUseCase,
-  DisabledLibrariansUseCase,
-  ApprovedLibrariansUseCase,
+  ListLibrariansUseCase,
 } from './usecases';
 import { ApproveLibrarianAccess, ListPaginatedLibrarians } from './dto';
 
@@ -23,9 +21,7 @@ export class LibrariansController {
   constructor(
     private readonly approveLibrarianAccessUseCase: ApproveLibrarianAccessUseCase,
     private readonly deactivateLibrarianAccessUseCase: DeactivateLibrarianAccessUseCase,
-    private readonly pendingApprovesUseCase: PendingApprovesUseCase,
-    private readonly disabledLibrariansUseCase: DisabledLibrariansUseCase,
-    private readonly approvedLibrariansUseCase: ApprovedLibrariansUseCase,
+    private readonly listLibrariansUseCase: ListLibrariansUseCase,
   ) {}
 
   @Post('approve')
@@ -40,21 +36,9 @@ export class LibrariansController {
     return this.deactivateLibrarianAccessUseCase.perform(input);
   }
 
-  @Get('pending')
+  @Get()
   @UseGuards(JwtGuard, AdminGuard)
-  async pendingApprove(@Query() input: ListPaginatedLibrarians) {
-    return this.pendingApprovesUseCase.perform(input);
-  }
-
-  @Get('disabled')
-  @UseGuards(JwtGuard, AdminGuard)
-  async disabledLibrarians(@Query() input: ListPaginatedLibrarians) {
-    return this.disabledLibrariansUseCase.perform(input);
-  }
-
-  @Get('approved')
-  @UseGuards(JwtGuard, AdminGuard)
-  async approvedLibrarians(@Query() input: ListPaginatedLibrarians) {
-    return this.approvedLibrariansUseCase.perform(input);
+  async listLibrarians(@Query() input: ListPaginatedLibrarians) {
+    return this.listLibrariansUseCase.perform(input);
   }
 }

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Librarians Controller List approved librarians Success Should list paginated approved librarians 1`] = `
+exports[`Librarians Controller List Success Should list paginated approved librarians 1`] = `
 {
   "items": [
     {
@@ -22,7 +22,64 @@ exports[`Librarians Controller List approved librarians Success Should list pagi
 }
 `;
 
-exports[`Librarians Controller Pending approves Success Should list paginated pending approves 1`] = `
+exports[`Librarians Controller List Success Should list paginated disabled librarians 1`] = `
+{
+  "items": [
+    {
+      "approved": false,
+      "approvedAt": null,
+      "createdAt": "2020-01-02T04:00:00.000Z",
+      "disabled": true,
+      "disabledAt": "2077-01-01T04:00:00.000Z",
+      "email": "mockedDisabledLibrarianEmail",
+      "id": "a0000000-0000-4000-a000-000000000005",
+      "lastName": "mockedDisabledLibrarianLastName",
+      "name": "mockedDisabledLibrarianName",
+      "password": "cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f",
+      "role": "LIBRARIAN",
+    },
+  ],
+  "page": 1,
+  "records": 1,
+}
+`;
+
+exports[`Librarians Controller List Success Should list paginated disabled or approved librarians 1`] = `
+{
+  "items": [
+    {
+      "approved": true,
+      "approvedAt": "2077-01-01T04:00:00.000Z",
+      "createdAt": "2020-01-01T04:00:00.000Z",
+      "disabled": false,
+      "disabledAt": null,
+      "email": "mockedLibrarianEmail",
+      "id": "a0000000-0000-4000-a000-000000000001",
+      "lastName": "mockedLibrarianLastName",
+      "name": "mockedLibrarianName",
+      "password": "cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f",
+      "role": "LIBRARIAN",
+    },
+    {
+      "approved": false,
+      "approvedAt": null,
+      "createdAt": "2020-01-02T04:00:00.000Z",
+      "disabled": true,
+      "disabledAt": "2077-01-01T04:00:00.000Z",
+      "email": "mockedDisabledLibrarianEmail",
+      "id": "a0000000-0000-4000-a000-000000000005",
+      "lastName": "mockedDisabledLibrarianLastName",
+      "name": "mockedDisabledLibrarianName",
+      "password": "cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f",
+      "role": "LIBRARIAN",
+    },
+  ],
+  "page": 1,
+  "records": 2,
+}
+`;
+
+exports[`Librarians Controller List Success Should list paginated pending approves 1`] = `
 {
   "items": [
     {

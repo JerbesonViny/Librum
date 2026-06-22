@@ -190,6 +190,25 @@ describe('Books Controller', () => {
         expect(books.length).toBe(2);
         expect(books).toMatchSnapshot();
       });
+
+      it('Should search books', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/books?search=pedra')
+          .set({
+            authorization: `Bearer ${infiniteTenantJwtTokenMock}`,
+          });
+
+        const messageError = response.body?.message;
+        const body = response.body;
+        const page = body?.page;
+        const records = body?.records;
+        const books = body?.items;
+        expect(messageError).toBeUndefined();
+        expect(page).toBe(1);
+        expect(records).toBe(1);
+        expect(books.length).toBe(1);
+        expect(books).toMatchSnapshot();
+      });
     });
 
     describe('Errors', () => {

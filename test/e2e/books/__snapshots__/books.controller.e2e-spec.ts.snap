@@ -170,3 +170,20 @@ exports[`Books Controller List Success Should list books using pageSize and page
   },
 ]
 `;
+
+exports[`Books Controller List Success Should search books 1`] = `
+[
+  {
+    "authors": [
+      {
+        "id": "a0000000-0000-4000-a000-000000000001",
+        "name": "J.K. Rowling",
+      },
+    ],
+    "description": "livro do harry potter",
+    "id": "a0000000-0000-4000-a000-000000000002",
+    "releaseDate": "19970502",
+    "title": "Harry Potter e a Pedra filosofal",
+  },
+]
+`;

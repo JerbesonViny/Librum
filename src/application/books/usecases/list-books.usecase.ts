@@ -9,6 +9,7 @@ import {
 type Input = {
   page: number;
   pageSize: number;
+  search?: string;
 };
 
 type Output = {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import {
   Create,
@@ -8,7 +8,7 @@ import {
   FindOneBookInput,
   PaginatedBooks,
   PaginatedOutput,
-  Pagination,
+  PaginatedBooksInput,
 } from '@/domain/contracts/repositories';
 import { BookEntity, EntityId } from '@/domain/entities';
 import { BookOrmEntity } from '@/infra/database/typeorm';
@@ -56,16 +56,28 @@ export class BookRepository
   async paginate({
     page,
     pageSize,
-  }: Pagination): Promise<PaginatedOutput<BookEntity> | null> {
+    search,
+  }: PaginatedBooksInput): Promise<PaginatedOutput<BookEntity> | null> {
     const __page = !page || Number(page) <= 0 ? 1 : Number(page);
     const __pageSize = pageSize || 10;
     const __skip = __pageSize * (__page - 1);
+    const where = search
+      ? [
+          {
+            title: ILike(`%${search}%`),
+          },
+          {
+            description: ILike(`%${search}%`),
+          },
+        ]
+      : undefined;
 
     try {
       const [books, records] = await this.repository.findAndCount({
         relations: { authors: true },
         skip: __skip,
         take: __pageSize,
+        where,
       });
 
       return {

@@ -9,7 +9,7 @@ export type FindOneBookInput = {
 
 export interface FindOneBook extends FindOne<FindOneBookInput, BookEntity> {}
 
-export type PaginatedBooksInput = Pagination;
+export type PaginatedBooksInput = Pagination & { search?: string };
 
 export interface PaginatedBooks extends Paginated<
   PaginatedBooksInput,

@@ -8,4 +8,5 @@ export type CreateBookInput = {
 export type ListBooksInput = {
   page: number;
   pageSize: number;
+  search?: string;
 };

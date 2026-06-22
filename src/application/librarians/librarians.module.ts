@@ -8,6 +8,8 @@ import {
   ApproveLibrarianAccessUseCase,
   DeactivateLibrarianAccessUseCase,
   PendingApprovesUseCase,
+  ApprovedLibrariansUseCase,
+  DisabledLibrariansUseCase,
 } from './usecases';
 
 @Module({
@@ -20,6 +22,8 @@ import {
     ApproveLibrarianAccessUseCase,
     DeactivateLibrarianAccessUseCase,
     PendingApprovesUseCase,
+    ApprovedLibrariansUseCase,
+    DisabledLibrariansUseCase,
   ],
 })
 export class LibrariansModule {}

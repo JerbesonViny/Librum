@@ -191,4 +191,67 @@ describe('Librarians Controller', () => {
       });
     });
   });
+
+  describe('List approved librarians', () => {
+    describe('Success', () => {
+      it('Should list paginated approved librarians', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/librarian/approved')
+          .set({
+            authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
+          });
+
+        const body = response.body;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(body).toMatchSnapshot();
+      });
+    });
+
+    describe('Errors', () => {
+      it('Should throw error if tenant user was trying to list approved librarians', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/librarian/approved')
+          .set({ authorization: infiniteTenantJwtTokenMock });
+
+        const body = response.body;
+        expect(body.authorId).toBeUndefined();
+        expect(body.message).toBe('Admin access is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
+      it('Should throw error if librarian user was trying to list approved librarians', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/librarian/approved')
+          .set({ authorization: infiniteLibrarianJwtTokenMock });
+
+        const body = response.body;
+        expect(body.authorId).toBeUndefined();
+        expect(body.message).toBe('Admin access is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
+      it('Should throw error if token is undefined', async () => {
+        const response = await request(app.getHttpServer()).get(
+          '/librarian/approved',
+        );
+
+        const body = response.body;
+        expect(body.authorId).toBeUndefined();
+        expect(body.message).toBe('Token is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
+      it('Should throw error if token is invalid', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/librarian/approved')
+          .set({ authorization: 'Bearer invalidToken' });
+
+        const body = response.body;
+        expect(body.authorId).toBeUndefined();
+        expect(body.message).toBe('Invalid token.');
+        expect(body.statusCode).toBe(401);
+      });
+    });
+  });
 });

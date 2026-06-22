@@ -12,8 +12,10 @@ import {
   ApproveLibrarianAccessUseCase,
   DeactivateLibrarianAccessUseCase,
   PendingApprovesUseCase,
+  DisabledLibrariansUseCase,
+  ApprovedLibrariansUseCase,
 } from './usecases';
-import { ApproveLibrarianAccess, ListLibrariansPendingApprove } from './dto';
+import { ApproveLibrarianAccess, ListPaginatedLibrarians } from './dto';
 
 @Injectable()
 @Controller('librarian')
@@ -22,6 +24,8 @@ export class LibrariansController {
     private readonly approveLibrarianAccessUseCase: ApproveLibrarianAccessUseCase,
     private readonly deactivateLibrarianAccessUseCase: DeactivateLibrarianAccessUseCase,
     private readonly pendingApprovesUseCase: PendingApprovesUseCase,
+    private readonly disabledLibrariansUseCase: DisabledLibrariansUseCase,
+    private readonly approvedLibrariansUseCase: ApprovedLibrariansUseCase,
   ) {}
 
   @Post('approve')
@@ -38,7 +42,19 @@ export class LibrariansController {
 
   @Get('pending')
   @UseGuards(JwtGuard, AdminGuard)
-  async pendingApprove(@Query() input: ListLibrariansPendingApprove) {
+  async pendingApprove(@Query() input: ListPaginatedLibrarians) {
     return this.pendingApprovesUseCase.perform(input);
+  }
+
+  @Get('disabled')
+  @UseGuards(JwtGuard, AdminGuard)
+  async disabledLibrarians(@Query() input: ListPaginatedLibrarians) {
+    return this.disabledLibrariansUseCase.perform(input);
+  }
+
+  @Get('approved')
+  @UseGuards(JwtGuard, AdminGuard)
+  async approvedLibrarians(@Query() input: ListPaginatedLibrarians) {
+    return this.approvedLibrariansUseCase.perform(input);
   }
 }

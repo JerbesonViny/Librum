@@ -2,7 +2,7 @@ export type ApproveLibrarianAccess = {
   librarianId: string;
 };
 
-export type ListLibrariansPendingApprove = {
+export type ListPaginatedLibrarians = {
   page: number;
   pageSize: number;
 };

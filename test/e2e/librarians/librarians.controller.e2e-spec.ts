@@ -44,7 +44,7 @@ describe('Librarians Controller', () => {
     describe('Success', () => {
       it('Should create a author', async () => {
         const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
+          .post('/librarians/approve')
           .set({
             authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
           })
@@ -63,7 +63,7 @@ describe('Librarians Controller', () => {
     describe('Errors', () => {
       it('Should throw error if tenant user was trying to approve librarian access', async () => {
         const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
+          .post('/librarians/approve')
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             librarianId: 'a0000000-0000-4000-a000-000000000004',
@@ -77,7 +77,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if librarian user was trying to approve librarian access', async () => {
         const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
+          .post('/librarians/approve')
           .set({ authorization: infiniteLibrarianJwtTokenMock })
           .send({
             librarianId: 'a0000000-0000-4000-a000-000000000004',
@@ -91,7 +91,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if token is undefined', async () => {
         const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
+          .post('/librarians/approve')
           .send({
             librarianId: 'a0000000-0000-4000-a000-000000000004',
           });
@@ -104,7 +104,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if token is invalid', async () => {
         const response = await request(app.getHttpServer())
-          .post('/librarian/approve')
+          .post('/librarians/approve')
           .set({ authorization: 'Bearer invalidToken' })
           .send({
             librarianId: 'a0000000-0000-4000-a000-000000000004',
@@ -122,7 +122,7 @@ describe('Librarians Controller', () => {
     describe('Success', () => {
       it('Should list paginated pending approves', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian?statuses=PENDING_APPROVE')
+          .get('/librarians?statuses=PENDING_APPROVE')
           .set({
             authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
           });
@@ -135,7 +135,7 @@ describe('Librarians Controller', () => {
 
       it('Should list paginated approved librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian?statuses=APPROVED')
+          .get('/librarians?statuses=APPROVED')
           .set({
             authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
           });
@@ -148,7 +148,7 @@ describe('Librarians Controller', () => {
 
       it('Should list paginated disabled librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian?statuses=DISABLED')
+          .get('/librarians?statuses=DISABLED')
           .set({
             authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
           });
@@ -161,7 +161,7 @@ describe('Librarians Controller', () => {
 
       it('Should list paginated disabled or approved librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian?statuses=DISABLED,APPROVED')
+          .get('/librarians?statuses=DISABLED,APPROVED')
           .set({
             authorization: `Bearer ${infiniteAdminJwtTokenMock}`,
           });
@@ -176,7 +176,7 @@ describe('Librarians Controller', () => {
     describe('Errors', () => {
       it('Should throw error if tenant user was trying to list librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian?statuses=PENDING_APPROVE')
+          .get('/librarians?statuses=PENDING_APPROVE')
           .set({ authorization: infiniteTenantJwtTokenMock });
 
         const body = response.body;
@@ -187,7 +187,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if librarian user was trying to list librarians', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian?statuses=PENDING_APPROVE')
+          .get('/librarians?statuses=PENDING_APPROVE')
           .set({ authorization: infiniteLibrarianJwtTokenMock });
 
         const body = response.body;
@@ -198,7 +198,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if token is undefined', async () => {
         const response = await request(app.getHttpServer()).get(
-          '/librarian?statuses=PENDING_APPROVE',
+          '/librarians?statuses=PENDING_APPROVE',
         );
 
         const body = response.body;
@@ -209,7 +209,7 @@ describe('Librarians Controller', () => {
 
       it('Should throw error if token is invalid', async () => {
         const response = await request(app.getHttpServer())
-          .get('/librarian?statuses=PENDING_APPROVE')
+          .get('/librarians?statuses=PENDING_APPROVE')
           .set({ authorization: 'Bearer invalidToken' });
 
         const body = response.body;

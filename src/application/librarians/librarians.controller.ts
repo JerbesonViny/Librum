@@ -16,7 +16,7 @@ import {
 import { ApproveLibrarianAccess, ListPaginatedLibrarians } from './dto';
 
 @Injectable()
-@Controller('librarian')
+@Controller('librarians')
 export class LibrariansController {
   constructor(
     private readonly approveLibrarianAccessUseCase: ApproveLibrarianAccessUseCase,

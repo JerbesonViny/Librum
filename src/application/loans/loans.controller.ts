@@ -5,7 +5,7 @@ import { CurrentUserId } from '@/infra/decorators';
 import { CreateLoanUseCase, ListLoansByUserUseCase } from './usecases';
 import { CreateLoanInput, ListLoansInput } from './dto';
 
-@Controller('loan')
+@Controller('loans')
 export class LoansController {
   constructor(
     private readonly createLoanUsecase: CreateLoanUseCase,

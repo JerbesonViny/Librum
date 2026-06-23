@@ -49,7 +49,7 @@ describe('Loans Controller', () => {
     describe('Success', () => {
       it('Should create loan', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000001',
@@ -67,7 +67,7 @@ describe('Loans Controller', () => {
     describe('Errors', () => {
       it('Should throw error if bookId is undefined', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             userId: 'a0000000-0000-4000-a000-000000000001',
@@ -81,7 +81,7 @@ describe('Loans Controller', () => {
 
       it('Should throw error if userId is undefined', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000001',
@@ -95,7 +95,7 @@ describe('Loans Controller', () => {
 
       it('Should throw error if librarian user was trying to create a new loan', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: infiniteLibrarianJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000002',
@@ -110,7 +110,7 @@ describe('Loans Controller', () => {
 
       it('Should throw error if book is already on loan', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000002',
@@ -125,7 +125,7 @@ describe('Loans Controller', () => {
 
       it('Should throw error if book is not found', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-100000000001',
@@ -140,7 +140,7 @@ describe('Loans Controller', () => {
 
       it('Should throw error if user is not found', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000001',
@@ -154,10 +154,12 @@ describe('Loans Controller', () => {
       });
 
       it('Should throw error if token is undefined', async () => {
-        const response = await request(app.getHttpServer()).post('/loan').send({
-          bookId: 'a0000000-0000-4000-a000-000000000003',
-          userId: 'a0000000-0000-4000-a000-000000000002',
-        });
+        const response = await request(app.getHttpServer())
+          .post('/loans')
+          .send({
+            bookId: 'a0000000-0000-4000-a000-000000000003',
+            userId: 'a0000000-0000-4000-a000-000000000002',
+          });
 
         const body = response.body;
         expect(body.loanId).toBeUndefined();
@@ -167,7 +169,7 @@ describe('Loans Controller', () => {
 
       it('Should throw error if token is invalid', async () => {
         const response = await request(app.getHttpServer())
-          .post('/loan')
+          .post('/loans')
           .set({ authorization: 'Bearer invalidToken' })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000003',
@@ -186,7 +188,7 @@ describe('Loans Controller', () => {
     describe('Success', () => {
       it('Should list loans', async () => {
         const response = await request(app.getHttpServer())
-          .get('/loan/me')
+          .get('/loans/me')
           .set({ authorization: infiniteTenantJwtTokenMock });
 
         const body = response.body;
@@ -200,7 +202,7 @@ describe('Loans Controller', () => {
 
     describe('Errors', () => {
       it('Should throw error if token is undefined', async () => {
-        const response = await request(app.getHttpServer()).get('/loan/me');
+        const response = await request(app.getHttpServer()).get('/loans/me');
 
         const body = response.body;
         expect(body.loanId).toBeUndefined();
@@ -210,7 +212,7 @@ describe('Loans Controller', () => {
 
       it('Should throw error if token is invalid', async () => {
         const response = await request(app.getHttpServer())
-          .get('/loan/me')
+          .get('/loans/me')
           .set({ authorization: 'Bearer invalidToken' });
 
         const body = response.body;

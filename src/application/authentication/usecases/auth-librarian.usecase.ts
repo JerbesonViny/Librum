@@ -64,7 +64,7 @@ export class AuthLibrarianUseCase {
   private buildToken(user: LibrarianEntity) {
     return createToken({
       payload: {
-        userId: user.getId(),
+        userId: user.getId().toString(),
         role: this.role,
       },
       privateKey: this.configService.get<string>('jwt.secretKey') as string,

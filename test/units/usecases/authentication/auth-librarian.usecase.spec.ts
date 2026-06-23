@@ -67,7 +67,7 @@ describe('AuthLibrarianUseCase', () => {
       expect(createHashSpy.mock.results[0].value).toBe(hashedPassword);
       expect(createTokenSpy).toHaveBeenCalledWith({
         payload: {
-          userId: defaultEntity.getId(),
+          userId: defaultEntity.getId().toString(),
           role: 'LIBRARIAN',
         },
         privateKey: '123',

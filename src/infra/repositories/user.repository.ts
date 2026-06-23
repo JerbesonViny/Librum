@@ -255,8 +255,6 @@ export class UserRepository
         });
       }
 
-      console.log(baseQuery.getSql());
-
       const [users, records] = await baseQuery
         .skip(skip)
         .limit(pageSize)

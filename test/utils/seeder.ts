@@ -140,10 +140,16 @@ export class DatabaseSeeder {
   private async seedBooks(client: PoolClient): Promise<void> {
     for (const book of books) {
       await client.query(
-        `INSERT INTO books (id, title, description, release_date)
-         VALUES ($1, $2, $3, $4)
+        `INSERT INTO books (id, title, description, release_date, created_at)
+         VALUES ($1, $2, $3, $4, $5)
          ON CONFLICT (id) DO NOTHING`,
-        [book.id, book.title, book.description, book.release_date],
+        [
+          book.id,
+          book.title,
+          book.description,
+          book.release_date,
+          book.createdAt,
+        ],
       );
     }
   }

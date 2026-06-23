@@ -44,6 +44,15 @@ export const users = [
       'cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f',
     createdAt: new Date('2020-01-02T04:00:00.000Z'),
   },
+  {
+    id: 'a0000000-0000-4000-a000-000000000006',
+    name: 'mockedSecondTenantName',
+    last_name: 'mockedSecondTenantLastName',
+    email: 'mockedSecondTenantEmail',
+    password:
+      'cfd5b1652ec2609241b1ac9480ff1b146a068a543a986e1ce8c6d456a919de98b573393282323a94743a04c4b47eb955b51154e77ca9ec3f5c2328572824c17f',
+    createdAt: new Date('2020-01-02T04:00:00.000Z'),
+  },
 ];
 
 export const librarians: any[] = [
@@ -70,6 +79,10 @@ export const tenants: any[] = [
   {
     user_id: 'a0000000-0000-4000-a000-000000000002',
     birth_date: '20020902',
+  },
+  {
+    user_id: 'a0000000-0000-4000-a000-000000000006',
+    birth_date: '20020202',
   },
 ];
 

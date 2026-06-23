@@ -5,15 +5,23 @@ import {
   FindOneLoanInput,
   GetPendingLoan,
   GetPendingLoanInput,
+  PaginatedLoans,
+  PaginatedLoansInput,
+  PaginatedOutput,
 } from '@/domain/contracts/repositories';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoanOrmEntity } from '@/infra/database/typeorm';
 import { EntityId, LoanEntity } from '@/domain/entities';
+import { buildPaginationParams } from '@/shared/utils/database.utils';
 
 @Injectable()
 export class LoanRepository
-  implements GetPendingLoan, FindOneLoan, Create<LoanEntity, EntityId>
+  implements
+    GetPendingLoan,
+    FindOneLoan,
+    Create<LoanEntity, EntityId>,
+    PaginatedLoans
 {
   constructor(
     @InjectRepository(LoanOrmEntity)
@@ -63,5 +71,25 @@ export class LoanRepository
     }
 
     return entity.getId();
+  }
+
+  async paginate(
+    input: PaginatedLoansInput,
+  ): Promise<PaginatedOutput<LoanOrmEntity> | null> {
+    const { page, skip, pageSize } = buildPaginationParams(input);
+
+    const [loans, records] = await this.repository
+      .createQueryBuilder('loan')
+      .innerJoinAndSelect('loan.book', 'book')
+      .where('loan.user_id = :id', { id: input.userId?.toString() })
+      .skip(skip)
+      .limit(pageSize)
+      .getManyAndCount();
+
+    return {
+      page,
+      records,
+      items: loans,
+    };
   }
 }

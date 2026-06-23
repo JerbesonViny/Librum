@@ -12,7 +12,11 @@ import {
   infiniteLibrarianJwtTokenMock,
   infiniteTenantJwtTokenMock,
 } from '../../mocks/auth.mocks';
-import { EmptyFieldError } from '../../../src/shared';
+import { EmptyFieldError } from '@/shared';
+
+import * as mockdate from 'mockdate';
+
+mockdate.set('2020-01-01T16:00:00.000Z');
 
 describe('Loans Controller', () => {
   let app: INestApplication<App>;
@@ -22,7 +26,6 @@ describe('Loans Controller', () => {
   beforeAll(async () => {
     connection = DatabaseConnector.getInstance();
     databaseSeeder = new DatabaseSeeder(connection);
-    await databaseSeeder.reset();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -31,6 +34,10 @@ describe('Loans Controller', () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalFilters(new HttpExceptionFilter());
     await app.init();
+  });
+
+  beforeEach(async () => {
+    await databaseSeeder.reset();
   });
 
   afterAll(async () => {
@@ -166,6 +173,45 @@ describe('Loans Controller', () => {
             bookId: 'a0000000-0000-4000-a000-000000000003',
             userId: 'a0000000-0000-4000-a000-000000000002',
           });
+
+        const body = response.body;
+        expect(body.loanId).toBeUndefined();
+        expect(body.message).toBe('Invalid token.');
+        expect(body.statusCode).toBe(401);
+      });
+    });
+  });
+
+  describe('List loans by current user', () => {
+    describe('Success', () => {
+      it('Should list loans', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/loan/me')
+          .set({ authorization: infiniteTenantJwtTokenMock });
+
+        const body = response.body;
+        const records = body?.records;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(records).toBeGreaterThan(0);
+        expect(body).toMatchSnapshot();
+      });
+    });
+
+    describe('Errors', () => {
+      it('Should throw error if token is undefined', async () => {
+        const response = await request(app.getHttpServer()).get('/loan/me');
+
+        const body = response.body;
+        expect(body.loanId).toBeUndefined();
+        expect(body.message).toBe('Token is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
+      it('Should throw error if token is invalid', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/loan/me')
+          .set({ authorization: 'Bearer invalidToken' });
 
         const body = response.body;
         expect(body.loanId).toBeUndefined();

@@ -1,14 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UseCase } from '@/domain/contracts/usecases';
 import {
-  FindOneUser,
   LOAN_REPOSITORY,
   PaginatedLoans,
-  USER_REPOSITORY,
 } from '@/domain/contracts/repositories';
-
 import { LoanOrmEntity } from '@/infra/database/typeorm';
-import { EmptyFieldError } from '@/shared';
 
 type Input = {
   userId?: string;
@@ -23,19 +19,19 @@ type Output = {
 };
 
 @Injectable()
-export class ListLoansByUserUseCase implements UseCase<Input, Output> {
+export class ListLoansUseCase implements UseCase<Input, Output> {
   constructor(
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: FindOneUser,
     @Inject(LOAN_REPOSITORY)
     private readonly loanRepository: PaginatedLoans,
   ) {}
 
   async perform({ page, pageSize, userId }: Input): Promise<Output | null> {
-    if (!userId) {
-      throw new EmptyFieldError('userId');
-    }
-
-    return this.loanRepository.paginate({ page, pageSize, userId });
+    return this.loanRepository.paginate({
+      page,
+      pageSize,
+      userId,
+      shouldResolveReturns: true,
+      shouldResolveUsers: true,
+    });
   }
 }

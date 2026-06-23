@@ -1,5 +1,77 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`Loans Controller List Success Should list loans 1`] = `
+{
+  "items": [
+    {
+      "book": {
+        "createdAt": "2020-01-01T04:00:00.000Z",
+        "description": "livro do harry potter",
+        "id": "a0000000-0000-4000-a000-000000000002",
+        "releaseDate": "19970502",
+        "title": "Harry Potter e a Pedra filosofal",
+      },
+      "createdAt": "2020-01-01T11:00:00.000Z",
+      "dueDate": "2020-01-16T11:00:00.000Z",
+      "id": "a0000000-0000-4000-a000-000000000001",
+      "returns": null,
+      "user": {
+        "createdAt": "2020-01-02T04:00:00.000Z",
+        "email": "mockedTenantEmail",
+        "id": "a0000000-0000-4000-a000-000000000002",
+        "lastName": "mockedTenantLastName",
+        "name": "mockedTenantName",
+      },
+    },
+    {
+      "book": {
+        "createdAt": "2020-01-01T04:00:00.000Z",
+        "description": "livro do harry potter",
+        "id": "a0000000-0000-4000-a000-000000000007",
+        "releaseDate": "20050502",
+        "title": "Harry Potter e a Enigma do Principe",
+      },
+      "createdAt": "2020-01-01T11:00:00.000Z",
+      "dueDate": "2020-01-16T11:00:00.000Z",
+      "id": "a0000000-0000-4000-a000-000000000002",
+      "returns": {
+        "createdAt": "2020-01-16T11:00:00.000Z",
+        "id": "a0000000-0000-4000-a000-000000000001",
+      },
+      "user": {
+        "createdAt": "2020-01-02T04:00:00.000Z",
+        "email": "mockedTenantEmail",
+        "id": "a0000000-0000-4000-a000-000000000002",
+        "lastName": "mockedTenantLastName",
+        "name": "mockedTenantName",
+      },
+    },
+    {
+      "book": {
+        "createdAt": "2020-01-01T04:00:00.000Z",
+        "description": "livro do harry potter",
+        "id": "a0000000-0000-4000-a000-000000000005",
+        "releaseDate": "20000502",
+        "title": "Harry Potter e o Calice de Fogo",
+      },
+      "createdAt": "2020-01-01T11:00:00.000Z",
+      "dueDate": "2020-01-16T11:00:00.000Z",
+      "id": "a0000000-0000-4000-a000-000000000003",
+      "returns": null,
+      "user": {
+        "createdAt": "2020-01-02T04:00:00.000Z",
+        "email": "mockedSecondTenantEmail",
+        "id": "a0000000-0000-4000-a000-000000000006",
+        "lastName": "mockedSecondTenantLastName",
+        "name": "mockedSecondTenantName",
+      },
+    },
+  ],
+  "page": 1,
+  "records": 3,
+}
+`;
+
 exports[`Loans Controller List loans by current user Success Should list loans 1`] = `
 {
   "items": [

@@ -31,7 +31,7 @@ export class UserOrmEntity {
   @Column({ type: 'varchar', length: 80, unique: true })
   email: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', select: false })
   password: string;
 
   @OneToOne(() => TenantOrmEntity, (tenant) => tenant.user)

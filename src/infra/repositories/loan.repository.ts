@@ -10,10 +10,15 @@ import {
   PaginatedOutput,
 } from '@/domain/contracts/repositories';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { LoanOrmEntity } from '@/infra/database/typeorm';
 import { EntityId, LoanEntity } from '@/domain/entities';
 import { buildPaginationParams } from '@/shared/utils/database.utils';
+
+type BuildPaginateParams = {
+  input: PaginatedLoansInput;
+  query: SelectQueryBuilder<LoanOrmEntity>;
+};
 
 @Injectable()
 export class LoanRepository
@@ -43,6 +48,7 @@ export class LoanRepository
       .createQueryBuilder('loan')
       .where('loan.id = :id', { id: input.id.toString() })
       .innerJoinAndSelect('loan.user', 'user')
+      .addSelect('user.password')
       .innerJoinAndSelect('loan.book', 'book')
       .innerJoinAndSelect('book.authors', 'authors');
 
@@ -78,10 +84,9 @@ export class LoanRepository
   ): Promise<PaginatedOutput<LoanOrmEntity> | null> {
     const { page, skip, pageSize } = buildPaginationParams(input);
 
-    const [loans, records] = await this.repository
-      .createQueryBuilder('loan')
-      .innerJoinAndSelect('loan.book', 'book')
-      .where('loan.user_id = :id', { id: input.userId?.toString() })
+    const query = this.buildPaginateQuery(input);
+
+    const [loans, records] = await query
       .skip(skip)
       .limit(pageSize)
       .getManyAndCount();
@@ -91,5 +96,42 @@ export class LoanRepository
       records,
       items: loans,
     };
+  }
+
+  private buildPaginateQuery(input: PaginatedLoansInput) {
+    let baseQuery = this.repository
+      .createQueryBuilder('loan')
+      .innerJoinAndSelect('loan.book', 'book');
+
+    baseQuery = this.buildExtraJoins({ query: baseQuery, input });
+    baseQuery = this.buildWhereConditions({ query: baseQuery, input });
+
+    return baseQuery.addOrderBy('loan.id');
+  }
+
+  private buildExtraJoins({ input, query }: BuildPaginateParams) {
+    const copyQuery = query;
+
+    if (input.shouldResolveReturns) {
+      copyQuery.leftJoinAndSelect('loan.returns', 'returns');
+    }
+
+    if (input.shouldResolveUsers) {
+      copyQuery.innerJoinAndSelect('loan.user', 'user');
+    }
+
+    return copyQuery;
+  }
+
+  private buildWhereConditions({ input, query }: BuildPaginateParams) {
+    const copyQuery = query;
+
+    if (input.userId) {
+      copyQuery.andWhere('loan.user_id = :id', {
+        id: input.userId?.toString(),
+      });
+    }
+
+    return copyQuery;
   }
 }

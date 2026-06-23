@@ -222,4 +222,43 @@ describe('Loans Controller', () => {
       });
     });
   });
+
+  describe('List', () => {
+    describe('Success', () => {
+      it('Should list loans', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/loans')
+          .set({ authorization: infiniteLibrarianJwtTokenMock });
+
+        const body = response.body;
+        const records = body?.records;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(records).toBeGreaterThan(0);
+        expect(body).toMatchSnapshot();
+      });
+    });
+
+    describe('Errors', () => {
+      it('Should throw error if token is undefined', async () => {
+        const response = await request(app.getHttpServer()).get('/loans');
+
+        const body = response.body;
+        expect(body.loanId).toBeUndefined();
+        expect(body.message).toBe('Token is required.');
+        expect(body.statusCode).toBe(401);
+      });
+
+      it('Should throw error if token is invalid', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/loans')
+          .set({ authorization: 'Bearer invalidToken' });
+
+        const body = response.body;
+        expect(body.loanId).toBeUndefined();
+        expect(body.message).toBe('Invalid token.');
+        expect(body.statusCode).toBe(401);
+      });
+    });
+  });
 });

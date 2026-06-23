@@ -137,7 +137,9 @@ export class UserRepository
 
     baseQuery = this.getJoin({ baseQuery, role });
 
-    return baseQuery.where('user.email = :email', { email: email }).select();
+    return baseQuery
+      .where('user.email = :email', { email: email })
+      .addSelect('user.password');
   }
 
   private getJoin({ baseQuery, role }: GetJoin) {
@@ -167,7 +169,7 @@ export class UserRepository
       .where('user.id = :id', { id: input.id.toString() });
     baseQuery = this.getJoin({ baseQuery, role: input.role });
 
-    const user = await baseQuery.getOne();
+    const user = await baseQuery.addSelect('user.password').getOne();
 
     if (!user) {
       return null;
@@ -241,7 +243,9 @@ export class UserRepository
     const roleCondition = this.getUserWhereByRole(input);
 
     try {
-      let baseQuery = this.userRepository.createQueryBuilder('user');
+      let baseQuery = this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password');
       baseQuery = this.getJoin({ baseQuery });
 
       if (roleCondition) {

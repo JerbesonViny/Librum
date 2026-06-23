@@ -18,7 +18,11 @@ export type FindOneLoanInput = {
 
 export interface FindOneLoan extends FindOne<FindOneLoanInput, LoanEntity> {}
 
-export type PaginatedLoansInput = Pagination & { userId?: string };
+export type PaginatedLoansInput = Pagination & {
+  userId?: string;
+  shouldResolveReturns?: boolean;
+  shouldResolveUsers?: boolean;
+};
 
 export interface PaginatedLoans extends Paginated<
   PaginatedLoansInput,

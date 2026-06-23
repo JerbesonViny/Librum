@@ -29,6 +29,7 @@ export class ReturnsRepository
       .where('returns.loan_id = :loanId', { loanId: input.loanId?.toString() })
       .innerJoinAndSelect('returns.loan', 'loan')
       .innerJoinAndSelect('loan.user', 'user')
+      .addSelect('user.password')
       .innerJoinAndSelect('loan.book', 'book')
       .innerJoinAndSelect('book.authors', 'authors');
 

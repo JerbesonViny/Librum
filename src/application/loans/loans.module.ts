@@ -10,7 +10,11 @@ import {
 } from '@/infra/database/typeorm';
 import { BooksModule } from '@/application/books/books.module';
 import { AuthenticationModule } from '@/application/authentication/authentication.module';
-import { CreateLoanUseCase, ListLoansByUserUseCase } from './usecases';
+import {
+  CreateLoanUseCase,
+  ListLoansByUserUseCase,
+  ListLoansUseCase,
+} from './usecases';
 import { LoansController } from './loans.controller';
 
 const LoanRepositoryFactory = {
@@ -29,6 +33,7 @@ const LoanRepositoryFactory = {
     // Usecases
     CreateLoanUseCase,
     ListLoansByUserUseCase,
+    ListLoansUseCase,
 
     // Repositories
     LoanRepositoryFactory,

@@ -7,13 +7,12 @@ import {
   PaginatedReturns,
   PaginatedReturnsInput,
 } from '@/domain/contracts/repositories';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { ReturnsLoanOrmEntity } from '@/infra/database/typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityId, ReturnsEntity } from '@/domain/entities';
 import { EmptyFieldError } from '@/shared';
 import { buildPaginationParams } from '@/shared/utils/database.utils';
-import { SelectQueryBuilder } from 'typeorm/browser';
 
 type BuildPaginateParams = {
   input: PaginatedReturnsInput;

@@ -8,7 +8,7 @@ describe('Auth Utils', () => {
   describe('Jwt', () => {
     it('Should decode token', () => {
       const expectedPayload = {
-        id: '6a2b3fa1ed358eaafa29055e',
+        userId: 'a0000000-0000-4000-a000-000000000001',
         role: 'LIBRARIAN',
         iat: 1781277254,
       };

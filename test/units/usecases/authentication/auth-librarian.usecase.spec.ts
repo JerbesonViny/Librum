@@ -22,6 +22,8 @@ describe('AuthLibrarianUseCase', () => {
     lastName: 'mockedLastName',
     email: validEmail,
     password: hashedPassword,
+    approved: true,
+    approvedAt: new Date('2077-01-01'),
   });
 
   beforeAll(() => {

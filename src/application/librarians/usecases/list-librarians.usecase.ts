@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Inject, Injectable } from '@nestjs/common';
 import { UseCase } from '@/domain/contracts/usecases';
 import { LibrarianStatus, UserEntity } from '@/domain/entities';
@@ -26,12 +27,24 @@ export class ListLibrariansUseCase implements UseCase<Input, Output> {
   ) {}
 
   async perform({ statuses, ...input }: Input): Promise<Output | null> {
-    return this.userRepository.paginate({
+    const response = await this.userRepository.paginate({
       ...input,
       role: 'LIBRARIAN',
       librarian: {
         statuses,
       },
     });
+
+    const librarians = response?.items.map(
+      ({ password, ...librarian }: any) => ({
+        ...librarian,
+      }),
+    ) as any[];
+
+    return {
+      items: librarians,
+      page: response!.page,
+      records: response!.records,
+    };
   }
 }

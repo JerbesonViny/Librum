@@ -31,7 +31,7 @@ export class AuthenticationController {
         summary: 'Credenciais validas',
         value: {
           email: 'mockedLibrarianEmail',
-          password: 'mockedLibrarianPassword',
+          password: 'mockedPassword',
         },
       },
     },
@@ -85,7 +85,7 @@ export class AuthenticationController {
         summary: 'Credenciais validas',
         value: {
           email: 'mockedTenantEmail',
-          password: 'mockedTenantPassword',
+          password: 'mockedPassword',
         },
       },
       wrongPassword: {

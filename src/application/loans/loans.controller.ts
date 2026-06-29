@@ -34,7 +34,6 @@ export class LoansController {
     schema: {
       type: 'object',
       properties: {
-        userId: { type: 'string', title: 'ID do usuario' },
         bookId: { type: 'string', title: 'ID do livro a ser emprestado' },
       },
     },
@@ -42,7 +41,6 @@ export class LoansController {
       valid: {
         summary: 'Entrada valida',
         value: {
-          userId: 'a0000000-0000-4000-a000-000000000002',
           bookId: 'a0000000-0000-4000-a000-000000000004',
         },
       },
@@ -117,14 +115,29 @@ export class LoansController {
       },
     },
   })
-  async create(@Body() input: CreateLoanInput) {
-    return this.createLoanUsecase.perform(input);
+  async create(
+    @CurrentUserId() userId: string,
+    @Body() input: CreateLoanInput,
+  ) {
+    return this.createLoanUsecase.perform({ ...input, userId });
   }
 
   @Get('me')
   @UseGuards(JwtGuard, TenantGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Listar meus emprestimos' })
+  @ApiQuery({
+    name: 'page',
+    type: 'string',
+    nullable: true,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    type: 'string',
+    nullable: true,
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     content: {
@@ -182,7 +195,7 @@ export class LoansController {
       },
     },
   })
-  async me(@CurrentUserId() userId: string, @Body() input: ListLoansInput) {
+  async me(@CurrentUserId() userId: string, @Query() input: ListLoansInput) {
     return this.listLoansByUserUsecase.perform({ ...input, userId });
   }
 

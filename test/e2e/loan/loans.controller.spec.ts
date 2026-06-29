@@ -53,7 +53,6 @@ describe('Loans Controller', () => {
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000001',
-            userId: 'a0000000-0000-4000-a000-000000000002',
           });
 
         const loanId = response.body.loanId;
@@ -79,27 +78,12 @@ describe('Loans Controller', () => {
         expect(loanId).toBeUndefined();
       });
 
-      it('Should throw error if userId is undefined', async () => {
-        const response = await request(app.getHttpServer())
-          .post('/loans')
-          .set({ authorization: infiniteTenantJwtTokenMock })
-          .send({
-            bookId: 'a0000000-0000-4000-a000-000000000001',
-          });
-
-        const loanId = response.body.loanId;
-        const messageError = response.body?.message;
-        expect(messageError).toBe(new EmptyFieldError('userId').message);
-        expect(loanId).toBeUndefined();
-      });
-
       it('Should throw error if librarian user was trying to create a new loan', async () => {
         const response = await request(app.getHttpServer())
           .post('/loans')
           .set({ authorization: infiniteLibrarianJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000002',
-            userId: 'a0000000-0000-4000-a000-000000000002',
           });
 
         const body = response.body;
@@ -114,7 +98,6 @@ describe('Loans Controller', () => {
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000002',
-            userId: 'a0000000-0000-4000-a000-000000000002',
           });
 
         const body = response.body;
@@ -129,7 +112,6 @@ describe('Loans Controller', () => {
           .set({ authorization: infiniteTenantJwtTokenMock })
           .send({
             bookId: 'a0000000-0000-4000-a000-100000000001',
-            userId: 'a0000000-0000-4000-a000-000000000002',
           });
 
         const body = response.body;
@@ -138,27 +120,11 @@ describe('Loans Controller', () => {
         // expect(body.statusCode).toBe(401);
       });
 
-      it('Should throw error if user is not found', async () => {
-        const response = await request(app.getHttpServer())
-          .post('/loans')
-          .set({ authorization: infiniteTenantJwtTokenMock })
-          .send({
-            bookId: 'a0000000-0000-4000-a000-000000000001',
-            userId: 'a0000000-0000-4000-a000-100000000002',
-          });
-
-        const body = response.body;
-        expect(body.loanId).toBeUndefined();
-        expect(body.message).toBe('User not found.');
-        // expect(body.statusCode).toBe(401);
-      });
-
       it('Should throw error if token is undefined', async () => {
         const response = await request(app.getHttpServer())
           .post('/loans')
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000003',
-            userId: 'a0000000-0000-4000-a000-000000000002',
           });
 
         const body = response.body;
@@ -173,7 +139,6 @@ describe('Loans Controller', () => {
           .set({ authorization: 'Bearer invalidToken' })
           .send({
             bookId: 'a0000000-0000-4000-a000-000000000003',
-            userId: 'a0000000-0000-4000-a000-000000000002',
           });
 
         const body = response.body;

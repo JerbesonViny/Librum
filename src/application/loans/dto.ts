@@ -1,5 +1,4 @@
 export type CreateLoanInput = {
-  userId: string;
   bookId: string;
 };
 

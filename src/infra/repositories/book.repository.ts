@@ -29,7 +29,7 @@ export class BookRepository
     });
 
     try {
-      await this.repository.insert(book);
+      await this.repository.save(book);
     } catch (error) {
       console.log(error);
       return null;

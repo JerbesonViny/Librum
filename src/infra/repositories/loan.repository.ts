@@ -70,7 +70,7 @@ export class LoanRepository
     } as unknown as LoanOrmEntity);
 
     try {
-      await this.repository.insert(loan);
+      await this.repository.save(loan);
     } catch (error) {
       console.log(error);
       return null;

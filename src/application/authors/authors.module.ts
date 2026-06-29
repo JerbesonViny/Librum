@@ -6,6 +6,7 @@ import { AuthorRepository } from '@/infra/repositories';
 import { AuthorOrmEntity } from '@/infra/database/typeorm';
 import { CreateAuthorUseCase } from './usecases';
 import { AuthorsController } from './authors.controller';
+import { AuthenticationModule } from '@/application/authentication/authentication.module';
 
 const AuthorRepositoryFactory = {
   provide: AUTHOR_REPOSITORY,
@@ -13,7 +14,7 @@ const AuthorRepositoryFactory = {
 };
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthorOrmEntity])],
+  imports: [TypeOrmModule.forFeature([AuthorOrmEntity]), AuthenticationModule],
   controllers: [AuthorsController],
   providers: [
     // Usecases

@@ -7,6 +7,7 @@ import { AuthorOrmEntity, BookOrmEntity } from '@/infra/database/typeorm';
 import { CreateBookUseCase, ListBooksUseCase } from './usecases';
 import { BooksController } from './books.controller';
 import { AuthorsModule } from '@/application/authors/authors.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 const BookRepositoryFactory = {
   provide: BOOK_REPOSITORY,
@@ -17,6 +18,7 @@ const BookRepositoryFactory = {
   imports: [
     TypeOrmModule.forFeature([BookOrmEntity, AuthorOrmEntity]),
     AuthorsModule,
+    AuthenticationModule,
   ],
   controllers: [BooksController],
   providers: [

@@ -7,6 +7,7 @@ import { ReturnsRepository } from '@/infra/repositories';
 import { ReturnsController } from './returns.controller';
 import { CreateReturnsUseCase } from './usecases';
 import { LoansModule } from '../loans/loans.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 const ReturnsRepositoryFactory = {
   provide: RETURNS_REPOSITORY,
@@ -14,7 +15,11 @@ const ReturnsRepositoryFactory = {
 };
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ReturnsLoanOrmEntity]), LoansModule],
+  imports: [
+    TypeOrmModule.forFeature([ReturnsLoanOrmEntity]),
+    LoansModule,
+    AuthenticationModule,
+  ],
   controllers: [ReturnsController],
   providers: [
     // Usecases

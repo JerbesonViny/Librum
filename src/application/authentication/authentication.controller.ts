@@ -153,7 +153,7 @@ export class AuthenticationController {
         summary: 'Credenciais validas',
         value: {
           email: 'mockedAdminEmail',
-          password: 'mockedAdminPassword',
+          password: 'mockedPassword',
         },
       },
     },

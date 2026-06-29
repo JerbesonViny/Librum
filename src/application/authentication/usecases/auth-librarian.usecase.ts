@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import {
   LibrarianAccessError,
   UserNotFoundError,
@@ -11,7 +11,7 @@ import {
   GetUserByEmail,
   USER_REPOSITORY,
 } from '@/domain/contracts/repositories/user.repository';
-import { LibrarianEntity, UserRoles } from '@/domain/entities';
+import { LibrarianEntity, UserEntity, UserRoles } from '@/domain/entities';
 
 export type Input = {
   email: string;
@@ -42,8 +42,16 @@ export class AuthLibrarianUseCase {
       throw new UserNotFoundError();
     }
 
-    if (user.getRole() !== this.role) {
+    if (!this.isLibrarianGuard(user)) {
       throw new LibrarianAccessError();
+    }
+
+    if (user.isDisabled()) {
+      throw new HttpException('Disabled librarian.', 401);
+    }
+
+    if (!user.isApproved()) {
+      throw new HttpException('Unapproved librarian.', 401);
     }
 
     const hashedPassword = createHash(password);
@@ -69,5 +77,9 @@ export class AuthLibrarianUseCase {
       },
       privateKey: this.configService.get<string>('jwt.secretKey') as string,
     });
+  }
+
+  private isLibrarianGuard(user: UserEntity): user is LibrarianEntity {
+    return user.getRole() === 'LIBRARIAN';
   }
 }

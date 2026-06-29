@@ -1,10 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UseCase } from '@/domain/contracts/usecases';
 import {
-  FindOneUser,
   PaginatedReturns,
   RETURNS_REPOSITORY,
-  USER_REPOSITORY,
 } from '@/domain/contracts/repositories';
 
 import { ReturnsLoanOrmEntity } from '@/infra/database/typeorm';
@@ -25,8 +23,6 @@ type Output = {
 @Injectable()
 export class ListReturnsByUserUseCase implements UseCase<Input, Output> {
   constructor(
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: FindOneUser,
     @Inject(RETURNS_REPOSITORY)
     private readonly returnsRepository: PaginatedReturns,
   ) {}

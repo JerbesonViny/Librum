@@ -3,16 +3,26 @@ import {
   Create,
   FindOneReturns,
   FindOneReturnsInput,
+  PaginatedOutput,
+  PaginatedReturns,
+  PaginatedReturnsInput,
 } from '@/domain/contracts/repositories';
 import { Repository } from 'typeorm';
 import { ReturnsLoanOrmEntity } from '@/infra/database/typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityId, ReturnsEntity } from '@/domain/entities';
 import { EmptyFieldError } from '@/shared';
+import { buildPaginationParams } from '@/shared/utils/database.utils';
+import { SelectQueryBuilder } from 'typeorm/browser';
+
+type BuildPaginateParams = {
+  input: PaginatedReturnsInput;
+  query: SelectQueryBuilder<ReturnsLoanOrmEntity>;
+};
 
 @Injectable()
 export class ReturnsRepository
-  implements FindOneReturns, Create<ReturnsEntity, EntityId>
+  implements FindOneReturns, Create<ReturnsEntity, EntityId>, PaginatedReturns
 {
   constructor(
     @InjectRepository(ReturnsLoanOrmEntity)
@@ -57,5 +67,57 @@ export class ReturnsRepository
     }
 
     return entity.getId();
+  }
+
+  async paginate(
+    input: PaginatedReturnsInput,
+  ): Promise<PaginatedOutput<ReturnsLoanOrmEntity> | null> {
+    const { page, skip, pageSize } = buildPaginationParams(input);
+
+    const query = this.buildPaginateQuery(input);
+
+    const [returns, records] = await query
+      .skip(skip)
+      .limit(pageSize)
+      .getManyAndCount();
+
+    return {
+      page,
+      records,
+      items: returns,
+    };
+  }
+
+  private buildPaginateQuery(input: PaginatedReturnsInput) {
+    let baseQuery = this.repository
+      .createQueryBuilder('returns')
+      .innerJoinAndSelect('returns.loan', 'loan');
+
+    baseQuery = this.buildExtraJoins({ query: baseQuery, input });
+    baseQuery = this.buildWhereConditions({ query: baseQuery, input });
+
+    return baseQuery.addOrderBy('returns.id');
+  }
+
+  private buildExtraJoins({ input, query }: BuildPaginateParams) {
+    const copyQuery = query;
+
+    if (input.shouldResolveUsers) {
+      copyQuery.innerJoinAndSelect('loan.user', 'user');
+    }
+
+    return copyQuery;
+  }
+
+  private buildWhereConditions({ input, query }: BuildPaginateParams) {
+    const copyQuery = query;
+
+    if (input.userId) {
+      copyQuery.andWhere('loan.user_id = :id', {
+        id: input.userId?.toString(),
+      });
+    }
+
+    return copyQuery;
   }
 }

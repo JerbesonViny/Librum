@@ -5,9 +5,9 @@ import { ReturnsLoanOrmEntity } from '@/infra/database/typeorm';
 import { RETURNS_REPOSITORY } from '@/domain/contracts/repositories';
 import { ReturnsRepository } from '@/infra/repositories';
 import { ReturnsController } from './returns.controller';
-import { CreateReturnsUseCase } from './usecases';
-import { LoansModule } from '../loans/loans.module';
-import { AuthenticationModule } from '../authentication/authentication.module';
+import { CreateReturnsUseCase, ListReturnsByUserUseCase } from './usecases';
+import { LoansModule } from '@/application/loans/loans.module';
+import { AuthenticationModule } from '@/application/authentication/authentication.module';
 
 const ReturnsRepositoryFactory = {
   provide: RETURNS_REPOSITORY,
@@ -24,6 +24,7 @@ const ReturnsRepositoryFactory = {
   providers: [
     // Usecases
     CreateReturnsUseCase,
+    ListReturnsByUserUseCase,
 
     // Repositories
     ReturnsRepositoryFactory,

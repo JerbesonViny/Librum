@@ -6,7 +6,7 @@ export class LibrarianOrmEntity {
   @PrimaryColumn('uuid', { name: 'user_id' })
   userId: string;
 
-  @OneToOne(() => UserOrmEntity, (user) => user.tenant)
+  @OneToOne(() => UserOrmEntity, (user) => user.librarian)
   @JoinColumn({ name: 'user_id' })
   user: UserOrmEntity;
 

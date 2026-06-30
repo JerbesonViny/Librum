@@ -39,7 +39,7 @@ export class AuthorRepository
   }
 
   async findMany(input: FindManyAuthorsInput): Promise<AuthorEntity[] | null> {
-    if (!Object.keys(input)?.length) {
+    if (!Object.keys(input)?.length || !input.authorIds?.length) {
       return null;
     }
 

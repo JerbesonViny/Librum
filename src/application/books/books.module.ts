@@ -7,7 +7,7 @@ import { AuthorOrmEntity, BookOrmEntity } from '@/infra/database/typeorm';
 import { CreateBookUseCase, ListBooksUseCase } from './usecases';
 import { BooksController } from './books.controller';
 import { AuthorsModule } from '@/application/authors/authors.module';
-import { AuthenticationModule } from '../authentication/authentication.module';
+import { AuthenticationModule } from '@/application/authentication/authentication.module';
 
 const BookRepositoryFactory = {
   provide: BOOK_REPOSITORY,

@@ -7,6 +7,7 @@ import {
 } from '@/domain/contracts/repositories';
 import { BookEntity, EntityId } from '@/domain/entities';
 import { CreateEntityError, EntityNotFound } from '@/shared/errors';
+import { UseCase } from '@/domain/contracts/usecases';
 
 type Input = {
   title: string;
@@ -19,7 +20,7 @@ type Output = {
   bookId: string;
 };
 
-export class CreateBookUseCase {
+export class CreateBookUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject(BOOK_REPOSITORY)
     private readonly bookRepository: Create<BookEntity, EntityId>,

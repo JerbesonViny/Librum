@@ -3,6 +3,7 @@ import { Inject } from '@nestjs/common';
 import { Create, AUTHOR_REPOSITORY } from '@/domain/contracts/repositories';
 import { AuthorEntity, EntityId } from '@/domain/entities';
 import { CreateEntityError } from '@/shared/errors';
+import { UseCase } from '@/domain/contracts/usecases';
 
 type Input = {
   name: string;
@@ -12,7 +13,7 @@ type Output = {
   authorId: string;
 };
 
-export class CreateAuthorUseCase {
+export class CreateAuthorUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject(AUTHOR_REPOSITORY)
     private readonly authorRepository: Create<AuthorEntity, EntityId>,

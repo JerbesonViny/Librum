@@ -12,6 +12,7 @@ import {
   USER_REPOSITORY,
 } from '@/domain/contracts/repositories/user.repository';
 import { LibrarianEntity, UserEntity, UserRoles } from '@/domain/entities';
+import { UseCase } from '@/domain/contracts/usecases';
 
 export type Input = {
   email: string;
@@ -23,7 +24,7 @@ export type Output = {
 } | null;
 
 @Injectable()
-export class AuthLibrarianUseCase {
+export class AuthLibrarianUseCase implements UseCase<Input, Output> {
   private readonly role: UserRoles = 'LIBRARIAN';
 
   constructor(

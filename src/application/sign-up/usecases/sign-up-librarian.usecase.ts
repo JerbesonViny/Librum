@@ -12,6 +12,7 @@ import {
   Create,
 } from '@/domain/contracts/repositories';
 import { EntityId, LibrarianEntity, UserRoles } from '@/domain/entities';
+import { UseCase } from '@/domain/contracts/usecases';
 
 type Input = {
   email: string;
@@ -25,7 +26,7 @@ type Output = {
 } | null;
 
 @Injectable()
-export class SignUpLibrarianUseCase {
+export class SignUpLibrarianUseCase implements UseCase<Input, Output> {
   private readonly role: UserRoles = 'LIBRARIAN';
 
   constructor(

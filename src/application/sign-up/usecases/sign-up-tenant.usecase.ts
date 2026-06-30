@@ -12,6 +12,7 @@ import {
   Create,
 } from '@/domain/contracts/repositories';
 import { EntityId, TenantEntity, UserRoles } from '@/domain/entities';
+import { UseCase } from '@/domain/contracts/usecases';
 
 type Input = {
   email: string;
@@ -26,7 +27,7 @@ type Output = {
 } | null;
 
 @Injectable()
-export class SignUpTenantUseCase {
+export class SignUpTenantUseCase implements UseCase<Input, Output> {
   private readonly role: UserRoles = 'TENANT';
 
   constructor(

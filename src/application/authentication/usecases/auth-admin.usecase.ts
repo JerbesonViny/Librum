@@ -12,6 +12,7 @@ import {
   USER_REPOSITORY,
 } from '@/domain/contracts/repositories/user.repository';
 import { AdminEntity, UserRoles } from '@/domain/entities';
+import { UseCase } from '@/domain/contracts/usecases';
 
 type Input = {
   email: string;
@@ -23,7 +24,7 @@ type Output = {
 } | null;
 
 @Injectable()
-export class AuthAdminUseCase {
+export class AuthAdminUseCase implements UseCase<Input, Output> {
   private readonly role: UserRoles = 'ADMIN';
 
   constructor(

@@ -138,7 +138,7 @@ classDiagram
 
         #validate() void
         +copy() AuthorEntity
-        +getId() string
+        +getId() EntityId
         +setName() void
         +getName() string
     }
@@ -190,14 +190,16 @@ classDiagram
         +getCreatedAt() Date
     }
 
-    UserEntity *-- EntityId
-    AuthorEntity *-- EntityId
-    BookEntity *-- EntityId
-    LoanEntity *-- EntityId
+    UserEntity    *-- EntityId
+    AuthorEntity  *-- EntityId
+    BookEntity    *-- EntityId
+    LoanEntity    *-- EntityId
     ReturnsEntity *-- EntityId
 
-    BookEntity "1" --> "1..*" AuthorEntity : tem
-    ReturnsEntity "0..1" --> "1" LoanEntity: tem
+    BookEntity       "1" --> "1..*" AuthorEntity : tem
+    ReturnsEntity "0..1" --> "1"    LoanEntity   : tem
+    LoanEntity    "0..*" --> "1"    TenantEntity : tem
+    LoanEntity    "0..*" --> "1"    BookEntity   : tem
 
     UserEntity <|-- TenantEntity
     UserEntity <|-- LibrarianEntity

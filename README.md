@@ -32,6 +32,26 @@ Por baixo dos panos, ele vai estar executando o comando anterior relacionado ao 
 yarn start:dev
 ```
 
+## Recomendação
+
+Após rodar o projeto, recomendo executar pelo menos um teste end-to-end. Fazendo isso, você forçará a criação de seeds, o que permitirá que você use os recursos documentados com swagger e, consiga também fazer algumas listagens de livros sem ter que criar nada, mesmo que não seja pelo swagger. Caso queira, entre no container através do comando
+
+```bash
+docker compose exec app sh
+```
+
+e posteriormente, rode os testes executando:
+
+```sh
+yarn test
+```
+
+ou, caso queira rodar apenas um:
+
+```sh
+yarn test test/e2e/books/books.controller.e2e-spec.ts
+```
+
 # Funcionalidades
 
 - Criar usuário

@@ -5,7 +5,6 @@ import { ReturnsLoanOrmEntity } from '@/infra/database/typeorm';
 export const RETURNS_REPOSITORY = Symbol('RETURNS_REPOSITORY');
 
 export type FindOneReturnsInput = {
-  id?: EntityId;
   loanId?: EntityId;
 };
 

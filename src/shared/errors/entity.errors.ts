@@ -55,3 +55,17 @@ export class CannotApproveDisabledLibrarian extends Error {
     this.name = 'CannotApproveDisabledLibrarian';
   }
 }
+
+export class BirthDateFormatError extends Error {
+  constructor() {
+    super('Invalid format. Expected format: yyyyMMdd.');
+    this.name = 'BirthDateFormatError';
+  }
+}
+
+export class FutureBirthDateError extends Error {
+  constructor() {
+    super('The BirthDate must be less than today.');
+    this.name = 'FutureBirthDateError';
+  }
+}

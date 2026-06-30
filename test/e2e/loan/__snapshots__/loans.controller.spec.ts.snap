@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Loans Controller List Success Should list loans 1`] = `
+exports[`Loans Controller List Success Should list loans with librarian token 1`] = `
 {
   "items": [
     {

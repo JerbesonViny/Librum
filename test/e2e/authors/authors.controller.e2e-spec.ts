@@ -69,7 +69,7 @@ describe('Authors Controller', () => {
 
         const body = response.body;
         expect(body.authorId).toBeUndefined();
-        expect(body.message).toBe('Librarian access is required.');
+        expect(body.message).toBe('Librarian or Admin access is required.');
         expect(body.statusCode).toBe(401);
       });
 

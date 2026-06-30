@@ -22,7 +22,6 @@ describe('Returns Controller', () => {
   beforeAll(async () => {
     connection = DatabaseConnector.getInstance();
     databaseSeeder = new DatabaseSeeder(connection);
-    await databaseSeeder.reset();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -31,6 +30,10 @@ describe('Returns Controller', () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalFilters(new HttpExceptionFilter());
     await app.init();
+  });
+
+  beforeEach(async () => {
+    await databaseSeeder.reset();
   });
 
   afterAll(async () => {

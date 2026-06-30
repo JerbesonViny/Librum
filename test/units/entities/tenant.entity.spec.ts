@@ -1,12 +1,24 @@
+import * as mockdate from 'mockdate';
+
 import { TenantEntity } from '@/domain/entities';
 import {
   EmptyFieldError,
+  FutureBirthDateError,
+  BirthDateFormatError,
   MinimumCharactersPasswordError,
 } from '@/shared/errors';
 import { entityIdMock, validTenantMock } from '../../mocks';
 
 describe('TenantEntity', () => {
   const defaultValue = 'default';
+
+  beforeAll(() => {
+    mockdate.set('2020-01-01');
+  });
+
+  afterAll(() => {
+    mockdate.reset();
+  });
 
   describe('Success', () => {
     it('Should have id field', () => {
@@ -49,5 +61,49 @@ describe('TenantEntity', () => {
         }).toThrow(new EmptyFieldError(field));
       },
     );
+
+    it.each(['2002', '200208090', 'abcd0809', '20021309', '20020132'])(
+      'Should throw error if birthDate "%s" has invalid format',
+      (birthDate) => {
+        expect(() => {
+          new TenantEntity({
+            id: entityIdMock,
+            name: defaultValue,
+            lastName: defaultValue,
+            password: defaultValue,
+            email: defaultValue,
+            birthDate,
+          });
+        }).toThrow(BirthDateFormatError);
+      },
+    );
+
+    it('Should throw error if birthDate is in the future', () => {
+      expect(() => {
+        new TenantEntity({
+          id: entityIdMock,
+          name: defaultValue,
+          lastName: defaultValue,
+          password: defaultValue,
+          email: defaultValue,
+          birthDate: '29991231',
+        });
+      }).toThrow(FutureBirthDateError);
+    });
+
+    it('Should throw error if birthDate is today', () => {
+      const birthDate = '20200101';
+
+      expect(() => {
+        new TenantEntity({
+          id: entityIdMock,
+          name: defaultValue,
+          lastName: defaultValue,
+          password: defaultValue,
+          email: defaultValue,
+          birthDate,
+        });
+      }).toThrow(FutureBirthDateError);
+    });
   });
 });

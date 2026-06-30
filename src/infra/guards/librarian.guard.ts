@@ -17,7 +17,7 @@ export class LibrarianGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers?.authorization.replace('Bearer ', '');
+    const token = request.headers?.authorization?.replace('Bearer ', '');
     const decodedToken = decodeToken({ token });
 
     if (!decodedToken || decodedToken?.role != 'LIBRARIAN') {

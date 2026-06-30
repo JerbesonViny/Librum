@@ -4,7 +4,7 @@ import { decodeToken } from '@/shared';
 export class TenantGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers?.authorization.replace('Bearer ', '');
+    const token = request.headers?.authorization?.replace('Bearer ', '');
     const decodedToken = decodeToken({ token });
 
     if (!decodedToken || decodedToken?.role != 'TENANT') {

@@ -52,7 +52,7 @@ export class SignUpTenantUseCase {
     }
 
     const tenant = new TenantEntity({
-      email,
+      email: formattedEmail,
       name,
       lastName,
       password,

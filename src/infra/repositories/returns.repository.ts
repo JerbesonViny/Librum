@@ -29,8 +29,8 @@ export class ReturnsRepository
   ) {}
 
   async findOne(input: FindOneReturnsInput): Promise<ReturnsEntity | null> {
-    if (!input.loanId && !input.id) {
-      throw new EmptyFieldError('loadId or id');
+    if (!input.loanId) {
+      throw new EmptyFieldError('loadId');
     }
 
     const query = this.repository

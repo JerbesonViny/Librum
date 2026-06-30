@@ -45,7 +45,7 @@ export class SignUpLibrarianUseCase {
     }
 
     const librarian = new LibrarianEntity({
-      email,
+      email: formattedEmail,
       name,
       lastName,
       password,
@@ -62,7 +62,7 @@ export class SignUpLibrarianUseCase {
     const librarianId = await this.userRepository.create(librarian);
 
     if (!librarianId) {
-      throw new CreateEntityError('Tenant');
+      throw new CreateEntityError('Librarian');
     }
 
     return { librarianId: librarianId.toString() };

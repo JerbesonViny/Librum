@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards, Query, Get } from '@nestjs/common';
 
-import { JwtGuard, LibrarianGuard } from '@/infra/guards';
+import { JwtGuard, LibrarianOrAdminGuard } from '@/infra/guards';
 import { CreateAuthorUseCase, ListAuthorsUseCase } from './usecases';
 import { CreateAuthorInput, ListPaginatedAuthorsInput } from './dto';
 import {
@@ -21,7 +21,7 @@ export class AuthorsController {
   ) {}
 
   @Post()
-  @UseGuards(JwtGuard, LibrarianGuard)
+  @UseGuards(JwtGuard, LibrarianOrAdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Criar autor' })
   @ApiBody({
@@ -82,9 +82,10 @@ export class AuthorsController {
             },
           },
           librarianAccess: {
-            summary: 'Somente bibliotecarios tem acesso a funcionalidade',
+            summary:
+              'Somente bibliotecarios ou admins possuem acesso a funcionalidade',
             value: {
-              message: 'Librarian access is required.',
+              message: 'Librarian or Admin access is required',
             },
           },
         },

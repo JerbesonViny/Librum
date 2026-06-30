@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { JwtGuard, LibrarianGuard, TenantGuard } from '@/infra/guards';
+import { JwtGuard, LibrarianOrAdminGuard, TenantGuard } from '@/infra/guards';
 import { CreateReturnsUseCase, ListReturnsByUserUseCase } from './usecases';
 import { CreateReturnsInput, ListReturnsInput } from './dto';
 import {
@@ -31,7 +31,7 @@ export class ReturnsController {
   ) {}
 
   @Post()
-  @UseGuards(JwtGuard, LibrarianGuard)
+  @UseGuards(JwtGuard, LibrarianOrAdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Registrar devolucao de livro' })
   @ApiBody({
@@ -93,9 +93,10 @@ export class ReturnsController {
             },
           },
           tenantAccess: {
-            summary: 'Somente bibliotecarios tem acesso',
+            summary:
+              'Somente bibliotecarios ou admins possuem acesso a funcionalidade',
             value: {
-              message: 'Librarian access is required.',
+              message: 'Librarian or Admin access is required',
             },
           },
         },

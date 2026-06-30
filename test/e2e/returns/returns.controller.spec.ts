@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from '@/infra/filters/http.filter';
 import { EntityId } from '@/domain/entities';
 import { DatabaseConnector, DatabaseSeeder } from '../../utils/seeder';
 import {
+  infiniteAdminJwtTokenMock,
   infiniteLibrarianJwtTokenMock,
   infiniteTenantJwtTokenMock,
 } from '../../mocks/auth.mocks';
@@ -39,10 +40,25 @@ describe('Returns Controller', () => {
 
   describe('Create', () => {
     describe('Success', () => {
-      it('Should create returns', async () => {
+      it('Should create returns with librarian token', async () => {
         const response = await request(app.getHttpServer())
           .post('/returns')
           .set({ authorization: infiniteLibrarianJwtTokenMock })
+          .send({
+            loanId: 'a0000000-0000-4000-a000-000000000001',
+          });
+
+        const returnsId = response.body.returnsId;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(returnsId).toBeDefined();
+        expect(EntityId.isValid(returnsId as string)).toBeTruthy();
+      });
+
+      it('Should create returns with admin token', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/returns')
+          .set({ authorization: infiniteAdminJwtTokenMock })
           .send({
             loanId: 'a0000000-0000-4000-a000-000000000001',
           });
@@ -66,7 +82,7 @@ describe('Returns Controller', () => {
 
         const body = response.body;
         expect(body.loanId).toBeUndefined();
-        expect(body.message).toBe('Librarian access is required.');
+        expect(body.message).toBe('Librarian or Admin access is required.');
         expect(body.statusCode).toBe(401);
       });
 

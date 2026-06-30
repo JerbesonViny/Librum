@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from '@/infra/filters/http.filter';
 import { EntityId } from '@/domain/entities';
 import { DatabaseConnector, DatabaseSeeder } from '../../utils/seeder';
 import {
+  infiniteAdminJwtTokenMock,
   infiniteLibrarianJwtTokenMock,
   infiniteTenantJwtTokenMock,
 } from '../../mocks/auth.mocks';
@@ -190,7 +191,7 @@ describe('Loans Controller', () => {
 
   describe('List', () => {
     describe('Success', () => {
-      it('Should list loans', async () => {
+      it('Should list loans with librarian token', async () => {
         const response = await request(app.getHttpServer())
           .get('/loans')
           .set({ authorization: infiniteLibrarianJwtTokenMock });
@@ -201,6 +202,18 @@ describe('Loans Controller', () => {
         expect(messageError).toBeUndefined();
         expect(records).toBeGreaterThan(0);
         expect(body).toMatchSnapshot();
+      });
+
+      it('Should list loans with admin token', async () => {
+        const response = await request(app.getHttpServer())
+          .get('/loans')
+          .set({ authorization: infiniteAdminJwtTokenMock });
+
+        const body = response.body;
+        const records = body?.records;
+        const messageError = response.body?.message;
+        expect(messageError).toBeUndefined();
+        expect(records).toBeGreaterThan(0);
       });
     });
 

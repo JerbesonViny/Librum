@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
 
-import { JwtGuard, LibrarianGuard, TenantGuard } from '@/infra/guards';
+import { JwtGuard, LibrarianOrAdminGuard, TenantGuard } from '@/infra/guards';
 import { CurrentUserId } from '@/infra/decorators';
 import {
   CreateLoanUseCase,
@@ -200,7 +200,7 @@ export class LoansController {
   }
 
   @Get()
-  @UseGuards(JwtGuard, LibrarianGuard)
+  @UseGuards(JwtGuard, LibrarianOrAdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Listar emprestimos' })
   @ApiQuery({
@@ -269,9 +269,10 @@ export class LoansController {
             },
           },
           tenantAccess: {
-            summary: 'Somente bibliotecarios tem acesso',
+            summary:
+              'Somente bibliotecarios ou admins possuem acesso a funcionalidade',
             value: {
-              message: 'Librarian access is required.',
+              message: 'Librarian or Admin access is required',
             },
           },
         },

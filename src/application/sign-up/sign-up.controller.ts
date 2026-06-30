@@ -115,7 +115,7 @@ export class SignUpController {
           password: '12345',
           name: 'Cesar',
           lastName: 'Rasec',
-          birthDate: '20770101',
+          birthDate: '20020101',
         },
       },
       invalidPassword: {
@@ -125,7 +125,7 @@ export class SignUpController {
           password: '123',
           name: 'Cesar',
           lastName: 'Rasec',
-          birthDate: '20770101',
+          birthDate: '20020101',
         },
       },
       emptyField: {

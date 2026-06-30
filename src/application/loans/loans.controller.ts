@@ -207,11 +207,13 @@ export class LoansController {
     name: 'page',
     type: 'string',
     nullable: true,
+    required: false,
   })
   @ApiQuery({
     name: 'pageSize',
     type: 'string',
     nullable: true,
+    required: false,
   })
   @ApiResponse({
     status: 200,

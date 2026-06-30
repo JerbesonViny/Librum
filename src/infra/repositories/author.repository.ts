@@ -6,13 +6,16 @@ import {
   Create,
   FindManyAuthors,
   FindManyAuthorsInput,
+  PaginatedAuthors,
+  PaginatedAuthorsInput,
+  PaginatedOutput,
 } from '@/domain/contracts/repositories';
 import { AuthorEntity, EntityId } from '@/domain/entities';
 import { AuthorOrmEntity } from '@/infra/database/typeorm';
 
 @Injectable()
 export class AuthorRepository
-  implements Create<AuthorEntity, EntityId>, FindManyAuthors
+  implements Create<AuthorEntity, EntityId>, FindManyAuthors, PaginatedAuthors
 {
   constructor(
     @InjectRepository(AuthorOrmEntity)
@@ -51,5 +54,31 @@ export class AuthorRepository
     }
 
     return authors.map((author) => author.toDomain());
+  }
+
+  async paginate({
+    page,
+    pageSize,
+  }: PaginatedAuthorsInput): Promise<PaginatedOutput<AuthorEntity> | null> {
+    const __page = !page || Number(page) <= 0 ? 1 : Number(page);
+    const __pageSize = pageSize || 10;
+    const __skip = __pageSize * (__page - 1);
+
+    try {
+      const [authors, records] = await this.repository.findAndCount({
+        skip: __skip,
+        take: __pageSize,
+      });
+
+      return {
+        page: __page,
+        records,
+        items: authors.map((author) => author.toDomain()),
+      };
+    } catch (error) {
+      console.log(error);
+    }
+
+    return null;
   }
 }

@@ -32,7 +32,41 @@ Por baixo dos panos, ele vai estar executando o comando anterior relacionado ao 
 yarn start:dev
 ```
 
+# Funcionalidades
+
+- Criar usuário
+  - Locatario
+  - Bibliotecário
+- Logar no sistema como:
+  - Locatário
+  - Bibliotecário
+  - Admin
+- Cadastrar
+  - Autor
+  - Livro
+- Listagem paginadas
+  - Livros
+  - Autores
+  - Empréstimos
+  - Devoluções
+  - Bibliotecários cadastrados
+- Buscar entidades relacionadas ao usuário logado
+  - Empréstimos
+  - Devoluções
+- Aprovar criação de conta de bibliotecário
+- Desativar conta de bibliotecário
+
+# Para testar o projeto
+
+Por conta do Swagger, fica mais fácil testar o projeto. Todas as rotas estão documentadas contendo entradas válidas e etc. Para acessar essa documentação, abra seu navegador e procure por:
+
+```
+http://localhost:3000/api/docs
+```
+
 # Diagrama UML
+
+O diagrama abaixo é mais focado nas entidades do sistema. Existem inúmeras classes, portanto, apenas nos atentamos as entidades.
 
 ## Entidades
 

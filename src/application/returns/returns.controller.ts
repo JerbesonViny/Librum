@@ -134,16 +134,13 @@ export class ReturnsController {
               records: 1,
               items: [
                 {
-                  id: 'dd10822f-df82-4550-84ee-d58d69acb6c0',
-                  book: {
-                    id: 'a0000000-0000-4000-a000-000000000004',
-                    title: 'Harry Potter e o Prisioneiro de Azkaban',
-                    description: 'livro do harry potter',
-                    releaseDate: '19990502',
-                    createdAt: '2020-01-01T04:00:00.000Z',
+                  id: 'a0000000-0000-4000-a000-000000000001',
+                  loan: {
+                    id: 'a0000000-0000-4000-a000-000000000002',
+                    dueDate: '2020-01-16T11:00:00.000Z',
+                    createdAt: '2020-01-01T11:00:00.000Z',
                   },
-                  dueDate: '2026-07-14T02:07:13.898Z',
-                  createdAt: '2026-06-29T02:07:13.899Z',
+                  createdAt: '2020-01-16T11:00:00.000Z',
                 },
               ],
             },

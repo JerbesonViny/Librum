@@ -1,12 +1,13 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Query, Get } from '@nestjs/common';
 
 import { JwtGuard, LibrarianGuard } from '@/infra/guards';
-import { CreateAuthorUseCase } from './usecases/create-author.usecase';
-import { CreateAuthorInput } from './dto';
+import { CreateAuthorUseCase, ListAuthorsUseCase } from './usecases';
+import { CreateAuthorInput, ListPaginatedAuthorsInput } from './dto';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -14,7 +15,10 @@ import {
 @ApiTags('author')
 @Controller('authors')
 export class AuthorsController {
-  constructor(private readonly createAuthorUsecase: CreateAuthorUseCase) {}
+  constructor(
+    private readonly createAuthorUsecase: CreateAuthorUseCase,
+    private readonly listPaginatedAuthorsUseCase: ListAuthorsUseCase,
+  ) {}
 
   @Post()
   @UseGuards(JwtGuard, LibrarianGuard)
@@ -89,5 +93,66 @@ export class AuthorsController {
   })
   create(@Body() input: CreateAuthorInput) {
     return this.createAuthorUsecase.perform(input);
+  }
+
+  @Get()
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Listar autores' })
+  @ApiQuery({
+    type: 'string',
+    name: 'page',
+    required: false,
+  })
+  @ApiQuery({
+    type: 'string',
+    name: 'pageSize',
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    content: {
+      'application/json': {
+        examples: {
+          success: {
+            summary: 'Listando autores',
+            value: {
+              page: 1,
+              records: 1,
+              items: [
+                {
+                  id: 'a0000000-0000-4000-a000-000000000001',
+                  name: 'J.K. Rowling',
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    content: {
+      'application/json': {
+        examples: {
+          missingToken: {
+            summary: 'Token nao fornecido',
+            value: {
+              message: 'Token is required.',
+            },
+          },
+          invalidToken: {
+            summary: 'Token nao valido',
+            value: {
+              message: 'Invalid token.',
+            },
+          },
+        },
+      },
+    },
+  })
+  list(@Query() input: ListPaginatedAuthorsInput) {
+    return this.listPaginatedAuthorsUseCase.perform(input);
   }
 }
